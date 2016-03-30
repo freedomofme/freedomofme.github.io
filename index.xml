@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Coder Yel</title>
+    <link>http://freedomofme.github.io/</link>
+    <description>Recent content on Coder Yel</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 30 Mar 2016 18:33:44 +0800</lastBuildDate>
+    <atom:link href="http://freedomofme.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Read me</title>
+      <link>http://freedomofme.github.io/ReadMe/</link>
+      <pubDate>Wed, 30 Mar 2016 18:33:44 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/ReadMe/</guid>
+      <description>&lt;p&gt;int a = 0;
+    int a = 0;
+    int a = 0;&lt;/p&gt;
+
+&lt;p&gt;qerqwe&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public void main (Stirng []a )
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
