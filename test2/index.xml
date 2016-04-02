@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Golang on Coder Yel</title>
-    <link>http://freedomofme.github.io/tags/golang/</link>
-    <description>Recent content in Golang on Coder Yel</description>
+    <title>Test2s on Coder Yel</title>
+    <link>http://freedomofme.github.io/test2/</link>
+    <description>Recent content in Test2s on Coder Yel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 01 Apr 2016 15:21:43 +0800</lastBuildDate>
-    <atom:link href="http://freedomofme.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://freedomofme.github.io/test2/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>关于我</title>
-      <link>http://freedomofme.github.io/readme/</link>
+      <title>ReadMe</title>
+      <link>http://freedomofme.github.io/test2/asdfas/</link>
       <pubDate>Fri, 01 Apr 2016 15:21:43 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/readme/</guid>
+      <guid>http://freedomofme.github.io/test2/asdfas/</guid>
       <description>&lt;p&gt;你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。
   目前，正在将以往的博客文章迁移过来~&lt;/p&gt;
 

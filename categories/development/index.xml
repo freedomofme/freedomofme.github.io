@@ -10,14 +10,93 @@
     <atom:link href="http://freedomofme.github.io/categories/development/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
-      <link>http://freedomofme.github.io/post/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+      <title>Java重排序和happens-before学习思路</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</link>
       <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/post/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
-      <description>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</guid>
+      <description>&lt;p&gt;鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。&lt;/p&gt;
 
-&lt;h3 id=&#34;如何根据二叉树的中序和前序-后序推导出整棵二叉树:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;如何根据二叉树的中序和前序\后序推导出整棵二叉树&lt;/h3&gt;
+&lt;p&gt;我觉得理解这些概念，比较好的思路是这样的：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;知道什么是重排序？
+&amp;gt; 重排序是编译器和处理器为了优化性能而对指令执行顺序进行重新排序。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;现在你已经知道了什么是重排序，认识下重排序的发生位置：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;编译器重排序&lt;/li&gt;
+&lt;li&gt;指令级并行重排序&lt;/li&gt;
+&lt;li&gt;内存系统重排序&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;理解单线程程序中可能发生指令的重排序&lt;/p&gt;
+
+&lt;p&gt;这就是说在单线程中，编译器也会进行重排序。但是为什么我以前写了这么久单线程的Java程序，都没有发现指令重排序这个问题？&lt;/p&gt;
+
+&lt;p&gt;原因是java遵从as-if-serial语义，即单线程的程序即使发生了重排序，程序的执行结果不能被改变。所以，即使发生了重排序，执行结果是一样的，所以你感觉不到。&lt;/p&gt;
+
+&lt;p&gt;比如说，对于有数据依赖的语句进行重排序，就会改变结果，所以会禁止此种情况的重排序。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;理解happens-before的定义&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;如果一个操作happens-before另一个操作，那么第一个操作的执行结果对第二个操作可见。且第一个操作排在第二个操作之前。&lt;/li&gt;
+&lt;li&gt;两个操作之间存在happens-before关系，如果重排序之后的对执行结果没有影响，也可以重排序。即表明不一定存在这个关系就一定不能重排序。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;happens-before规则&lt;/p&gt;
+
+&lt;p&gt;这里有6条：程序次序规则；监视器锁规则；volatile规则；传递性规则等等。
+比如：程序次序规则，它要求一个线程中的每个操作，happens-before该线程的任何后续操作。
+这里大家去查阅详细资料。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;此时可能会有一个疑惑，既然多线程程序的先后语句满足happens-before规则中程序次序规则，为什么还会重排序？&lt;/p&gt;
+
+&lt;p&gt;其实这个问题前面已经说了，第4点，在多线程程序中，也是由多个单线程组成的。他们中的每一个线程前后是存在happens-before规则。java以单线程的角度来看待这个问题：java认为对线程中语句进行重排序是不会改变结果的。&lt;/p&gt;
+
+&lt;p&gt;因为java又不知道你这个代码是会在多线程里运行还是单线程里运行，它只保证单线程运行时，重排序后不改变执行结果，当这代码在多线程里运行时就可能出现问题。&lt;/p&gt;
+
+&lt;p&gt;所以我们就需要在多线程中进行正确的同步的一个原因。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;学习volatile语义、锁的语义、和final的语义&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;此时就可惜学习java中的Thread的实现和并发容器的实现&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;总结&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;线程一：a -&amp;gt; b -&amp;gt; c
+线程二：A -&amp;gt; B -&amp;gt; C&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;若没有重排序的结果可能是&lt;/p&gt;
+
+&lt;p&gt;a -&amp;gt; A -&amp;gt; B -&amp;gt; b -&amp;gt; c -&amp;gt; C&lt;/p&gt;
+
+&lt;p&gt;也就是单个线程的顺序不变&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;若发生了重排序结果可能是&lt;/p&gt;
+
+&lt;p&gt;b -&amp;gt; B -&amp;gt; A -&amp;gt; a -&amp;gt; c -&amp;gt; C&lt;/p&gt;
+
+&lt;p&gt;就要分析里面的代码是否有happens-before的关系以及对每个单线程而言的重拍序是否会改变运行结果来分析。&lt;/p&gt;
+
+&lt;p&gt;本文参考：《并发编写的艺术》&lt;/p&gt;
+
+&lt;p&gt;欢迎批评指正：&lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+      <description>
 
 &lt;p&gt;本文将主要介绍程序的主要计算流程。&lt;/p&gt;
 
@@ -31,11 +110,11 @@
 
 &lt;p&gt;so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~&lt;/p&gt;
 
-&lt;p&gt;&amp;ndash;&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;p&gt;首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。&lt;/p&gt;
 
-&lt;p&gt;####由前序中序推导&lt;/p&gt;
+&lt;h4 id=&#34;由前序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由前序中序推导&lt;/h4&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;已知一棵二叉树的前序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
@@ -49,7 +128,7 @@
 &lt;/ul&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;####由后序中序推导&lt;/p&gt;
+&lt;h4 id=&#34;由后序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由后序中序推导&lt;/h4&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;已知一棵二叉树的后序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
@@ -89,12 +168,12 @@
     </item>
     
     <item>
-      <title>ReadMe</title>
-      <link>http://freedomofme.github.io/ReadMe/</link>
+      <title>关于我</title>
+      <link>http://freedomofme.github.io/readme/</link>
       <pubDate>Fri, 01 Apr 2016 15:21:43 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/ReadMe/</guid>
-      <description>&lt;p&gt;你好，我叫Coder Yel，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。
+      <guid>http://freedomofme.github.io/readme/</guid>
+      <description>&lt;p&gt;你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。
   目前，正在将以往的博客文章迁移过来~&lt;/p&gt;
 
 &lt;p&gt;我的邮箱：&lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;

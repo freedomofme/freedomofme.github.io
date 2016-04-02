@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/docco.min.css">
@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title> Coder Yel &middot; Coder Yel </title>
+  <title> Java重排序和happens-before学习思路 &middot; Coder Yel </title>
 
   
   <link rel="stylesheet" href="http://freedomofme.github.io/css/poole.css">
@@ -25,13 +25,15 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="http://freedomofme.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Coder Yel" />
+  <link href="" rel="alternate" type="application/rss+xml" title="Coder Yel" />
 
 </head>
 
-<body class="theme-base-0c ">
 
-<div class="sidebar">
+	
+	
+	<body class="theme-base-0c">
+		<div class="sidebar">
   <div class="container sidebar-sticky">
     <div class="sidebar-about">
       <a href="http://freedomofme.github.io/"><h1>Coder Yel</h1></a>
@@ -63,20 +65,21 @@
 
 
 
-    <div class="content container">
-<div class="posts">
+		<div class="content container">
+			<div class="post">
+			 	<h1>Java重排序和happens-before学习思路</h1>
+			  <span class="post-date">Fri, Apr 1, 2016
+			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
+        <a href="http://freedomofme.github.io//tags/development">Development&nbsp;&nbsp;</a> 
+      				
+        <a href="http://freedomofme.github.io//tags/java">Java&nbsp;&nbsp;</a> 
+      				
 
+			  </span>
+			  <ul >
       
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/">
-        Java重排序和happens-before学习思路
-      </a>
-    </h1>
-
-    <span class="post-date">Fri, Apr 1, 2016</span>
-
-    <p>鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。</p>
+   				</ul>
+			      <p>鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。</p>
 
 <p>我觉得理解这些概念，比较好的思路是这样的：</p>
 
@@ -149,106 +152,12 @@
 <p>欢迎批评指正：<a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p></li>
 </ul>
 
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/">
-        如何根据二叉树的中序和前序后序推导出整棵二叉树
-      </a>
-    </h1>
+			</div>
 
-    <span class="post-date">Fri, Apr 1, 2016</span>
+		
 
-    
-
-<p>本文将主要介绍程序的主要计算流程。</p>
-
-<p>写作目的：</p>
-
-<ol>
-<li>当然是为了为了加深理解二叉树遍历啦</li>
-<li>因为受不了笔试题老出这种题目，所以做出来方便大家以后答题O(∩_∩)O~</li>
-<li>最关键的是，每次遇到这种题目，我只会凑./捂脸</li>
-</ol>
-
-<p>so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~</p>
-
-<hr />
-
-<p>首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。</p>
-
-<h4 id="由前序中序推导:65af8147e2e31eeb70f80702d9fc030d">由前序中序推导</h4>
-
-<blockquote>
-<p>已知一棵二叉树的前序序列和中序序列，构造该二叉树的过程如下：</p>
-
-<ul>
-<li>根据前序序列的第一个元素建立根结点；</li>
-<li>在中序序列中找到该元素，确定根结点的左右子树的中序序列；</li>
-<li>在前序序列中确定左右子树的前序序列；</li>
-<li>由左子树的前序序列和中序序列建立左子树；</li>
-<li>由右子树的前序序列和中序序列建立右子树。</li>
-</ul>
-</blockquote>
-
-<h4 id="由后序中序推导:65af8147e2e31eeb70f80702d9fc030d">由后序中序推导</h4>
-
-<blockquote>
-<p>已知一棵二叉树的后序序列和中序序列，构造该二叉树的过程如下：</p>
-
-<ul>
-<li>根据后序序列的最后一个元素建立根结点；</li>
-<li>在中序序列中找到该元素，确定根结点的左右子树的中序序列；</li>
-<li>在后序序列中确定左右子树的后序序列；</li>
-<li>由左子树的后序序列和中序序列建立左子树；</li>
-<li>由右子树的后序序列和中序序列建立右子树。</li>
-</ul>
-</blockquote>
-
-<p>引用自：<a href="http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html">http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html</a></p>
-
-<h4 id="核心代码:65af8147e2e31eeb70f80702d9fc030d">核心代码</h4>
-
-<pre><code>public static void calPostOrder(String preString, String midString) {
-    if (preString.length() == 0) return;
-    if (preString.length() == 1) {
-        result.add(preString.charAt(0));
-    }
-    if (preString.length() &gt; 1) {
-        //前序首字母拆分中序字符串           
-        String[] resultStrings = midString.split(preString.charAt(0) + &quot;&quot;);
-        for (int i = 0; i &lt; resultStrings.length; i++) {
-            String newPreString = findSubStringInPreORPostString(preString, resultStrings[i]);
-            calPostOrder(newPreString, resultStrings[i]);
-        }
-        result.add(preString.charAt(0));
-    }
-}
-</code></pre>
-
-<p>其中findSubStringInPreORPostString()函数就是从先序字符串中取出对应中序的字符串的子串。</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://freedomofme.github.io/readme/">
-        关于我
-      </a>
-    </h1>
-
-    <span class="post-date">Fri, Apr 1, 2016</span>
-
-    <p>你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。
-  目前，正在将以往的博客文章迁移过来~</p>
-
-<p>我的邮箱：<a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p>
-
-  </div>
-  
-</div>
-</div>
+			
+		</div>
 
   </body>
 </html>

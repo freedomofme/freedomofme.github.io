@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Coder Yel</title>
-    <link>http://freedomofme.github.io/post/</link>
-    <description>Recent content in Posts on Coder Yel</description>
+    <title>Android on Coder Yel</title>
+    <link>http://freedomofme.github.io/tags/android/</link>
+    <description>Recent content in Android on Coder Yel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 01 Apr 2016 19:52:07 +0800</lastBuildDate>
-    <atom:link href="http://freedomofme.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://freedomofme.github.io/tags/android/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
-      <link>http://freedomofme.github.io/post/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
       <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/post/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
       <description>
-
-&lt;h3 id=&#34;如何根据二叉树的中序和前序-后序推导出整棵二叉树:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;如何根据二叉树的中序和前序\后序推导出整棵二叉树&lt;/h3&gt;
 
 &lt;p&gt;本文将主要介绍程序的主要计算流程。&lt;/p&gt;
 
@@ -31,7 +29,7 @@
 
 &lt;p&gt;so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~&lt;/p&gt;
 
-&lt;p&gt;&amp;ndash;&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;p&gt;首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。&lt;/p&gt;
 
