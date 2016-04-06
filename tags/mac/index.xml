@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mac on Coder Yel</title>
+    <link>http://freedomofme.github.io/tags/mac/</link>
+    <description>Recent content in Mac on Coder Yel</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 06 Apr 2016 17:56:45 +0800</lastBuildDate>
+    <atom:link href="http://freedomofme.github.io/tags/mac/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>解决mac的日历问题：服务器响应一个错误</title>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</link>
+      <pubDate>Wed, 06 Apr 2016 17:56:45 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</guid>
+      <description>
+
+&lt;p&gt;出了一个问题好久，平时也不用这个同步不靠谱的日历。今晚花点时间解决了下。&lt;/p&gt;
+
+&lt;p&gt;更新：三个月后，因为找到了微软的SunRise这个Android端APP实现Mac， ipad， Android日历共享啦。我就开始用这款软件了。&lt;/p&gt;
+
+&lt;p&gt;参考Apple 官网日历的问题解答。&lt;/p&gt;
+
+&lt;p&gt;当出现如下情况时：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png&#34; alt=&#34;http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;正确的操作步骤:685002b936a4b907022076cedfa8a94e&#34;&gt;正确的操作步骤&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;退出日历和提醒事项。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;从 Apple () 菜单中选取“系统偏好设置”，然后点按“iCloud”。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;点按注记格以取消选中“日历与提醒事项”。在 OS X Mountain Lion 中，取消选中“日历与提醒事项”的单个注记格。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;关闭“系统偏好设置”，再稍等片刻。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;打开“系统偏好设置”，并点按“iCloud”。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;点按注记格以选择“日历与提醒事项”。在 OS X Mountain Lion 中选择“日历与提醒事项”的单个注记格。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;关闭“系统偏好设置”。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;打开“提醒事项”并进行测试，以查看问题是否已解决。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;经过以上操作后可以重启下。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

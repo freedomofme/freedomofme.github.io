@@ -60,6 +60,8 @@ var _hmt = _hmt || [];
     
     <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
     
+    <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
 
       
         <li><a  href="/aboutme/"> 关于我 </a></li>
@@ -78,6 +80,681 @@ var _hmt = _hmt || [];
 <div class="posts">
 
       
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E4%BB%BF%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BBAndroid%E7%AB%AFAPP%E5%AE%9E%E7%8E%B0/">
+        仿网易新闻Android端APP实现
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    
+
+<h2 id="主要功能展示和代码实现:0e1910fcdf867805caab27c6340158d2">主要功能展示和代码实现</h2>
+
+<p>差不多花了一周的时间，目前实现的了新闻下的包括头条、体育、娱乐的一系列的新闻展示，以及点击后进入的新闻详情展示。</p>
+
+<h3 id="目前效果:0e1910fcdf867805caab27c6340158d2">目前效果</h3>
+
+<ul>
+<li><p>目前效果请访问该网页：<a href="http://www.cnblogs.com/FightForFreedom/p/4807083.html">http://www.cnblogs.com/FightForFreedom/p/4807083.html</a></p></li>
+
+<li><p>更新：目前新闻内容的详情展示已经实现</p></li>
+</ul>
+
+<h2 id="技术实现:0e1910fcdf867805caab27c6340158d2">技术实现</h2>
+
+<h3 id="框架实现:0e1910fcdf867805caab27c6340158d2">框架实现</h3>
+
+<p>APP总体底部的4个Fragment切换和在每个Fragment中的ViewPage切换, 采用的是LuckyJayce/ViewPagerIndicator的开源框架：地址是<a href="https://github.com/LuckyJayce/ViewPagerIndicator">https://github.com/LuckyJayce/ViewPagerIndicator</a></p>
+
+<h3 id="列表实现:0e1910fcdf867805caab27c6340158d2">列表实现</h3>
+
+<p>新闻列表采用纵向RecyclerView，其中暂时划分为3种类型。</p>
+
+<pre><code>public static enum ITEM_TYPE {
+    ITEM_TYPE_BANNER,
+    ITEM_TYPE_IMAGE,
+    ITEM_TYPE_TEXT
+}
+</code></pre>
+
+<p>分别表示以下3种类型：
+- BANNER：
+<img src="http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143937664-372953191.png" alt="" />
+- TEXT：
+<img src="http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143948320-1282950477.png" alt="" />
+- IMAGE：
+<img src="http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143954336-1896838803.png" alt="" /></p>
+
+<p>其中ITEM_TYPE_BANNER 采用SwitchImage单独控件形式（内部ViewPage实现
+ITEM_TYPE_TEXT比较简单，
+ITEM_TYPE_IMAGE的网易原版实现是3张图片。</p>
+
+<h3 id="列表改进:0e1910fcdf867805caab27c6340158d2">列表改进</h3>
+
+<p>为了增加用户体验，决定替换掉ITEM_TYPE_IMAGE中三种图片，改为水平滑动形式。
+现已实现了水平滑动和按钮点击响应：
+<img src="http://images2015.cnblogs.com/blog/739642/201509/739642-20150914144420304-1934370299.png" alt="" /></p>
+
+<p>当点击任意一张图片后将调转到ImageDisplayActivity：
+<img src="http://images2015.cnblogs.com/blog/739642/201509/739642-20150914152234539-499422592.png" alt="" /></p>
+
+<p>下面我将着重描述下ITEM_TYPE_IMAGE的水平滑动实现。</p>
+
+<p>想到水平滑动，我想大家肯定会想到这些控件：ViewPage，Gallery，HorizontalScrollview等等。</p>
+
+<p>不过，Google近来推出的RecyclerView也支持水平滑动，那就用它来试试。</p>
+
+<p>首先，垂直RecyclerView嵌入水平RecyclerView比较顺利，没有出现子列表只显示一行之类的问题，同时对水平RecyclerView滑动也没有出现问题。</p>
+
+<p>但是当我想对水平RecyclerView中的某张图片进行点击时，出现了onClick函数没有回调的问题，由于笔者水平和时间有限，暂时没有深究这个问题。</p>
+
+<p>于是采用了onTouch函数做点击响应的回调, 做了如下简单的判断：</p>
+
+<p>用户是点击图片还是水平滑动RecyclerIView</p>
+
+<pre><code>imageView.setOnTouchListener(new View.OnTouchListener() {
+  @Override
+ public boolean onTouch(View v, MotionEvent event) {
+  //抬起按钮时判断，之前是否滑动了,若没有滑动则响应点击事件
+                if (event.getAction() == MotionEvent.ACTION_UP &amp;&amp; !isMoved)
+                    mListener.onViewPageTouch((NetworkImageView) v, index);
+                else {
+                    isMoved = false;
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    isMoved = true;
+                }
+                return true;
+            }
+        });
+</code></pre>
+
+<h3 id="顶部沉浸式状态栏实现:0e1910fcdf867805caab27c6340158d2">顶部沉浸式状态栏实现</h3>
+
+<p>参考了这篇文章：
+<a href="http://www.jianshu.com/p/f8374d6267ef">http://www.jianshu.com/p/f8374d6267ef</a></p>
+
+<h3 id="新闻详情实现:0e1910fcdf867805caab27c6340158d2">新闻详情实现</h3>
+
+<p>首先，根据网络返回的数据的样式确定解析方案：</p>
+
+<p>NewsDisplayActivity.java第70行，展示了一个返回数据Html格式的样例：<a href="https://github.com/freedomofme/Netease/commit/bb6db85de547d4d5243e17e881bc2116122e52d6">https://github.com/freedomofme/Netease/commit/bb6db85de547d4d5243e17e881bc2116122e52d6</a></p>
+
+<p>本文采用的方法是通过Android自带的android.text.Html类解析Html和html下<img>标签的图像。
+核心代码如下：</p>
+
+<pre><code>    URLImageParser p = new URLImageParser(content, this);
+    Spanned htmlSpan = Html.fromHtml(body, p, null);
+    content.setText(htmlSpan);
+</code></pre>
+
+<p>其中的URLImageParser是用来解析<img>标签的，这里有很大的进一步优化的空间。</p>
+
+<p>这类主要是参考该文，并修正了图片尺寸上的问题。<a href="http://stackoverflow.com/questions/15617210/android-html-fromhtml-with-images/15617341#15617341">http://stackoverflow.com/questions/15617210/android-html-fromhtml-with-images/15617341#15617341</a></p>
+
+<p>当然，除了用TextView来展示Html（在Android
+中就是Spanned类），也可以使用WebView。
+两者的主要区别：
+* WebView：加载HTML更为方便（笔者觉得），支持的标签更多，与APP交互需要通过JS接口
+* TextView： 除了文本显示，对于其他很多交互行为，需要重写函数。开发者对展示细节的控制能力更强。
+详细内容可以参考:<a href="https://www.ibm.com/developerworks/cn/web/1407_zhangqian_androidhtml/">这里</a></p>
+
+<h3 id="数据网络请求:0e1910fcdf867805caab27c6340158d2">数据网络请求</h3>
+
+<p>采用的是Volley框架，并封装了RequestSingletonFactory工厂类来方便请求。
+URLs类中采用反射的方式来读取静态URL的数据。</p>
+
+<h3 id="接下来:0e1910fcdf867805caab27c6340158d2">接下来</h3>
+
+<ul>
+<li>完善新闻阅读的排版，对于部分网页存在数据不兼容，导致解析的Bug</li>
+<li>增加查看新闻评论功能</li>
+<li>增加用户设置界面</li>
+</ul>
+
+<h3 id="下载地址:0e1910fcdf867805caab27c6340158d2">下载地址</h3>
+
+<p>本项目将在持续更新，更加完善，项目源码地址：
+<a href="https://github.com/freedomofme/Netease">https://github.com/freedomofme/Netease</a></p>
+
+<p><a href="http://files.cnblogs.com/files/FightForFreedom/app-release.apk">APK安装包下载</a></p>
+
+<p>本开源项目仅供学习，不得作为其他用途</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E8%8E%B7%E5%8F%96%E8%81%94%E7%B3%BB%E4%BA%BA%E7%A4%BA%E4%BE%8B%EF%BC%8C%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E8%BD%BD%EF%BC%8C%E5%B8%A6%E9%A6%96%E5%AD%97%E6%AF%8D%E6%A0%87%E7%AD%BE/">
+        Android获取联系人示例，从数据库加载，带首字母标签
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    
+
+<p>这几天打算学习下Android联系人方面的一些东西，之前稍有涉略，不过每次都是浅尝辄止。</p>
+
+<p>推荐国内两个Link：</p>
+
+<p><a href="http://fanfq.iteye.com/blog/779569">Link1</a></p>
+
+<p><a href="http://www.icodelogic.com/?p=453">Link2</a></p>
+
+<p>以上两个都是读取联系人。</p>
+
+<p>第一个Link采用多次查询每次查询一条数据的方式，比较好理解，但是效率底。250条记录（6s）</p>
+
+<p>第二个Link采用的Querying entities，返回数据集，大大减少了查询次数。250条记录（200ms）。因为采用了联接的数据库查询方式（不大熟悉的话可以温习下数据库方面的知识），大大减少了查询次数。</p>
+
+<p>google上有对contacts的比较详细的教材,也有讲到到
+Querying entities：<a href="http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html">http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html</a></p>
+
+<p>推荐《精通Android》书里的介绍也不错</p>
+
+<h3 id="demo:637a22d20c7bd1c4d18680e663810998">Demo</h3>
+
+<p>根据最开始的两个link，做成一个Demo，给大家参考和批评：</p>
+
+<p>Demo下载地址：</p>
+
+<p><a href="http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip">http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip</a></p>
+
+<p>截图如下：</p>
+
+<p><img src="http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png" alt="http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png" /></p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98-ISO-8859-1%E5%92%8CGBK/">
+        字符集乱码问题:ISO-8859-1和GBK
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    
+
+<p>首先引用百度知道的问题：
+&gt;
+[<a href="http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81](">http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81](</a>)</p>
+
+<p>即：出现了以下字符乱码
+ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡
+如何解决？</p>
+
+<h3 id="方法一:e4ec21571305cc652d1ed9bd63a35f48">方法一：</h3>
+
+<p>String s_iso88591 = new String(&ldquo;ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡ &ldquo;.getBytes(&ldquo;ISO-8859-1&rdquo;),&ldquo;GBK&rdquo;);
+输出s_iso88591即可。</p>
+
+<h3 id="方法二:e4ec21571305cc652d1ed9bd63a35f48">方法二：</h3>
+
+<p>String testString = &ldquo;你好&rdquo;;
+byte[] hold = testString.getBytes(&ldquo;GBK&rdquo;);
+for (int i = 0 ; i &lt; hold.length; i++) {
+System.out.println((char)(256 + hold[i]));
+}
+输出: ÄãºÃ</p>
+
+<p>由此可见好好理解字符集还是相当必要的。</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E6%B5%85%E8%B0%88Java%E5%AF%B9%E8%B1%A1%E5%9B%9E%E6%94%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+        浅谈Java对象回收的三种方式
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    
+
+<p>最近在看Java虚拟机，写点给新手和自己看的东西。</p>
+
+<h3 id="第一类-生命周期中止:6029cb9672493498e7785f8d23b0964a">第一类：生命周期中止</h3>
+
+<pre><code>void scope（）{
+    Test t = new Test();
+}
+</code></pre>
+
+<h3 id="第二类-对象无引用:6029cb9672493498e7785f8d23b0964a">第二类：对象无引用</h3>
+
+<h5 id="对象的应用被转移:6029cb9672493498e7785f8d23b0964a">对象的应用被转移：</h5>
+
+<pre><code>void life（）{
+   Test t = new Test();
+    t = new Test();
+}
+</code></pre>
+
+<h5 id="对象被赋值为null:6029cb9672493498e7785f8d23b0964a">对象被赋值为null</h5>
+
+<pre><code>void scope（）{
+   Test t = new Test();
+   t = null;
+}
+</code></pre>
+
+<p>　　</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8EAndroid%E7%9A%84ListView%E4%B8%ADCheckBox%E9%94%99%E4%B9%B1/">
+        关于Android的ListView中CheckBox错乱
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    
+
+<p>本文参考：
+&gt; <a href="http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html">http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html</a></p>
+
+<p>上文中关于说的Android中的Recycler比较模糊，Android会维持屏幕中显示的item+1个对象。但是复用的时候选择哪个对象来复用的机制并不明确，具体用的是什么数据结构，求告知。。。肯定不是简单的FIFO或LIFO。</p>
+
+<h3 id="关于checkbox-选中了之后-下滑之后返回就消失的问题:26155ffc16647da895c63731007e82b8">关于checkBox，选中了之后，下滑之后返回就消失的问题。</h3>
+
+<p>有以下两种方式供大家参考：</p>
+
+<p>data是给TextView显示的数据</p>
+
+<p>isChecked是用来记录CheckBox是否选中的。</p>
+
+<pre><code>ArrayList&lt;String&gt; data;
+ArrayList&lt;Boolean&gt; isChecked;
+ class Holder {
+        TextView name;
+        CheckBox box;
+    }
+</code></pre>
+
+<p>　　</p>
+
+<h4 id="方法一:26155ffc16647da895c63731007e82b8">方法一：</h4>
+
+<p>用onClickedListener,使用这个监听器可以简单的避开CheckedBox选中消失的问题。</p>
+
+<p>其中：</p>
+
+<pre><code>holder.box.setTag(i);
+</code></pre>
+
+<p>用来给监听器指明选择的索引。</p>
+
+<pre><code> @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        if(view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+            holder = new Holder();
+            holder.box = (CheckBox) view.findViewById(R.id.cb_isChecked);
+            holder.name = (TextView) view.findViewById(R.id.tv_name);
+            view.setTag(holder);
+        } else {
+            holder = (Holder) view.getTag();
+        }
+        holder.name.setText(data.get(i));
+        System.out.println(&quot;即将改变成&quot; + isChecked.get(i) + &quot;i&quot; + i);
+        holder.box.setChecked(isChecked.get(i));
+　　
+        holder.box.setTag(i);
+        holder.box.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean hold = isChecked.get((Integer) view.getTag());
+                isChecked.set((Integer) view.getTag(), !hold);
+                System.out.println(&quot;compoundButton.getTag()&quot; + view.getTag());
+            }
+        });
+        return view;
+    }
+</code></pre>
+
+<h4 id="方法二:26155ffc16647da895c63731007e82b8">方法二：</h4>
+
+<p>继续使用onCheckedListener这个监听器，需要注意一些问题。</p>
+
+<p>代码：和上面的一样，就是把onClickListener改成onCheckedlistener，结果就出现了选中消失的问题。</p>
+
+<p>仔细看了在logcat中看了输出的结果，发现问题的所在：</p>
+
+<p>当我们选中一个item时，假设此时item1被选中，下拉列表，到时item1隐藏，item10出现，并复用了item1的结构。</p>
+
+<p>由于在getView函数中item10被赋值是false，此时，onCheckedListener监听器响应了（如果使用onClickedListener就没有以下问题，因为它再此时不会响应）。</p>
+
+<p>问题来了：</p>
+
+<p>因为在onCheckedListener根据view.getTag()来获得索引，而此时的索引是1，就是item1对象时setTag时留下的。</p>
+
+<p>最终导致此时监听器把用来存储布尔值的线性表的索引1的位置赋值成了item10的值。</p>
+
+<p>根据问题的成因，我们需要在 onCheckedListener响应前，让view.getTag()获得正确的索引。</p>
+
+<p>其实很简单只需要将</p>
+
+<pre><code>holder.box.setTag(i);
+</code></pre>
+
+<p>放到</p>
+
+<pre><code>holder.box.setChecked(isChecked.get(i));
+</code></pre>
+
+<p>前面就可以了。
+  此解决方案的完整代码：</p>
+
+<pre><code>public class ListAdapter2 extends BaseAdapter {
+    ArrayList&lt;String&gt; data;
+    ArrayList&lt;Boolean&gt; isChecked;
+    Context context;
+    Holder holder;
+    public ListAdapter2(Context context, ArrayList&lt;String&gt; data, ArrayList&lt;Boolean&gt; isChecked) {
+        this.context = context;
+        this.data = data;
+        this.isChecked = isChecked;
+    }
+
+@Override
+public int getCount() {
+    return data.size();
+}
+
+@Override
+public Object getItem(int i) {
+    return data.get(i);
+}
+
+@Override
+public long getItemId(int i) {
+    return i;
+}
+
+@Override
+public View getView(int i, View view, ViewGroup viewGroup) {
+    if(view == null) {
+        view = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+        holder = new Holder();
+        holder.box = (CheckBox) view.findViewById(R.id.cb_isChecked);
+        holder.name = (TextView) view.findViewById(R.id.tv_name);
+        view.setTag(holder);
+
+    } else {
+        holder = (Holder) view.getTag();
+    }
+
+    holder.name.setText(data.get(i));
+    System.out.println(&quot;即将改变成&quot; + isChecked.get(i) + &quot;i&quot; + i);
+    holder.box.setTag(i);
+
+    holder.box.setChecked(isChecked.get(i));
+
+    holder.box.setOnCheckedChangeListener(new CheckedListener());
+    return view;
+}
+
+class CheckedListener implements CompoundButton.OnCheckedChangeListener {
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        isChecked.set((Integer) compoundButton.getTag(), b);
+    }
+}
+
+class Holder {
+    TextView name;
+    CheckBox box;
+}
+}
+</code></pre>
+
+<p>　　
+　　</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/">
+        解决mac的日历问题：服务器响应一个错误
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    
+
+<p>出了一个问题好久，平时也不用这个同步不靠谱的日历。今晚花点时间解决了下。</p>
+
+<p>更新：三个月后，因为找到了微软的SunRise这个Android端APP实现Mac， ipad， Android日历共享啦。我就开始用这款软件了。</p>
+
+<p>参考Apple 官网日历的问题解答。</p>
+
+<p>当出现如下情况时：</p>
+
+<p><img src="http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png" alt="http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png" /></p>
+
+<h3 id="正确的操作步骤:685002b936a4b907022076cedfa8a94e">正确的操作步骤</h3>
+
+<ul>
+<li><p>退出日历和提醒事项。</p></li>
+
+<li><p>从 Apple () 菜单中选取“系统偏好设置”，然后点按“iCloud”。</p></li>
+
+<li><p>点按注记格以取消选中“日历与提醒事项”。在 OS X Mountain Lion 中，取消选中“日历与提醒事项”的单个注记格。</p></li>
+
+<li><p>关闭“系统偏好设置”，再稍等片刻。</p></li>
+
+<li><p>打开“系统偏好设置”，并点按“iCloud”。</p></li>
+
+<li><p>点按注记格以选择“日历与提醒事项”。在 OS X Mountain Lion 中选择“日历与提醒事项”的单个注记格。</p></li>
+
+<li><p>关闭“系统偏好设置”。</p></li>
+
+<li><p>打开“提醒事项”并进行测试，以查看问题是否已解决。</p></li>
+</ul>
+
+<p>经过以上操作后可以重启下。</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/">
+        Android 图像压缩，和LRU算法使用的推荐链接
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    <p>近两日，看的关于这些方面的一些教程数十篇，最好的当属google原版的教程了。国内有不少文章是翻译这个链接的。</p>
+
+<p>需要注意的一点是：Android的SDK中的LRU算法在V4包和Util包中各有一个，推荐使用V4包中的。</p>
+
+<p>在此，推荐两个链接：</p>
+
+<p><a href="https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html">https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html</a></p>
+
+<p><a href="http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html">http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html</a></p>
+
+<p>其中，第二个链接是对第一个链接所讲内容的例子演示，下载地址我已经clone到我的github上了，看了会对内容理解的更加深刻，强烈欢迎下载。</p>
+
+<p><a href="https://github.com/freedomofme/android-imagedownloader">https://github.com/freedomofme/android-imagedownloader</a></p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Anroid%E8%87%AA%E5%AE%9A%E4%B9%89RatingBar%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%8D%8A%E4%B8%AA%EF%BC%88%E5%B0%8F%E6%95%B0%E4%B8%AA%EF%BC%89%E7%9A%84stepSize%E6%97%B6%EF%BC%8C%E5%8F%98%E4%B8%BA%E6%95%B4%E6%95%B0%E4%B8%AA%E7%9A%84%E9%97%AE%E9%A2%98/">
+        Anroid自定义RatingBar，显示半个（小数个）的stepSize时，变为整数个的问题
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    <p><RatingBar
+        android:id="@+id/rb_starbar"
+        style="@style/joblist_item_ratingbar_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:rating="3.5"
+        android:stepSize="0.5" /></p>
+
+<p>RatingBar一般都是显示整数个数的，这次因为要显示半个的Star，就把之前的样式改了一改，结果，出现了问题：</p>
+
+<p>无论怎么设置setpSize的值，每次显示的Star都是整个的。。
+当使用以下样式时：</p>
+
+<pre><code>&lt;item
+    android:id=&quot;@+android:id/background&quot;
+    android:drawable=&quot;@drawable/ic_gray&quot;&gt;
+&lt;/item&gt;
+&lt;item
+    android:id=&quot;@+android:id/secondaryProgress&quot;
+    android:drawable=&quot;@drawable/ic_orange&quot;&gt;
+&lt;/item&gt;
+&lt;item
+    android:id=&quot;@+android:id/progress&quot;
+    android:drawable=&quot;@drawable/ic_orange&quot;&gt;
+&lt;/item&gt;
+</code></pre>
+
+<p>ic_orange：</p>
+
+<p><img src="http://images0.cnblogs.com/blog2015/739642/201505/310034043608696.png" alt="" /></p>
+
+<p>ic_gray：</p>
+
+<p><img src="http://images0.cnblogs.com/blog2015/739642/201505/310034363138191.png" alt="" /></p>
+
+<p>ic_setting：</p>
+
+<p><img src="http://images0.cnblogs.com/blog2015/739642/201505/310034509383960.png" alt="" /></p>
+
+<p>结果是这样的：</p>
+
+<p><img src="http://images0.cnblogs.com/blog2015/739642/201505/310023291579837.png" alt="" /></p>
+
+<p>为什么没有显示3.5个Star(=@__@=)？看了下Google的文档解释：</p>
+
+<blockquote>
+<p>android:secondaryProgress Defines the secondary progress value, between 0 and max.</p>
+</blockquote>
+
+<p>接下来替换secondaryProgress的drawable，看下结果：</p>
+
+<pre><code>  &lt;item
+        android:id=&quot;@+android:id/secondaryProgress&quot;
+        android:drawable=&quot;@drawable/ic_setting&quot;&gt;
+  &lt;/item&gt;
+</code></pre>
+
+<p>结果如下：
+<img src="http://images0.cnblogs.com/blog2015/739642/201505/310027290631131.png" alt="" /></p>
+
+<p>此处的secondaryProgress会向上取整(Math.cell())的显示图像。</p>
+
+<p>如此，一开始的问题也就迎刃而解了。</p>
+
+<p>以下为正确的XML文件配置代码：</p>
+
+<p>（下面的secondaryProgress部分和第一个secondaryProgress，已经调换的drawable。）</p>
+
+<pre><code>&lt;item
+    android:id=&quot;@+android:id/background&quot;
+    android:drawable=&quot;@drawable/ic_gray&quot;&gt;
+&lt;/item&gt;
+&lt;item
+    android:id=&quot;@+android:id/secondaryProgress&quot;
+    android:drawable=&quot;@drawable/ic_gray&quot;&gt;
+&lt;/item&gt;
+&lt;item
+    android:id=&quot;@+android:id/progress&quot;
+    android:drawable=&quot;@drawable/ic_orang&quot;&gt;
+&lt;/item&gt;
+</code></pre>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/">
+        Android图片适配，drawable文件夹，低分辨率图片是否必要
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    <p>我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：</p>
+
+<p>xxhdpi:3.0
+xhdpi: 2.0
+hdpi: 1.5
+mdpi: 1.0
+ldpi: 0.75
+于是一个问题产生了：</p>
+
+<p>从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？</p>
+
+<p>查了一些资料，终于在Google的开发者网站上找到了解答：
+&gt;
+Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.</p>
+
+<p><a href="http://developer.android.com/training/basics/supporting-devices/screens.html">Link</a></p>
+
+<p>大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。</p>
+
+<p>问题到此就解答完了。</p>
+
+<p>有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91For%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">
+        记第一次翻译For开源社区
+      </a>
+    </h1>
+
+    <span class="post-date">Wed, Apr 6, 2016</span>
+
+    <p>今晚在用火狐的Firebug，有点问题，去火狐社区找答案，</p>
+
+<p>结果去了火狐市场，看见了这一幕：</p>
+
+<p>忘记截图了~(⊙o⊙)…</p>
+
+<p>其实在两个小时前是这样的，“这个篇文章尚没有中文翻译版”。</p>
+
+<p>好吧，难得今晚心情不错，就去翻译下吧~~~嘿嘿</p>
+
+<p>先是注册个了火狐社区的账号，申请做志愿者的翻译工作，随后就挑了这篇文章开始翻译啦~</p>
+
+<p>花了半个小时时间，把它从英文版变为了中文版~~~</p>
+
+<p>这是链接：<a href="https://support.mozilla.org/zh-CN/kb/%E8%8B%B9%E6%9E%9C%E7%94%B5%E8%84%91-%E5%AE%89%E5%85%A8-%E8%AE%BE%E7%BD%AE-%E7%81%AB%E7%8B%90-%E5%BA%94%E7%94%A8%E5%B8%82%E5%9C%BA">https://support.mozilla.org/zh-CN/kb/%E8%8B%B9%E6%9E%9C%E7%94%B5%E8%84%91-%E5%AE%89%E5%85%A8-%E8%AE%BE%E7%BD%AE-%E7%81%AB%E7%8B%90-%E5%BA%94%E7%94%A8%E5%B8%82%E5%9C%BA</a></p>
+
+<p>翻译的好烂~，人家审核的妹子还通过了~~~感觉不错</p>
+
+<p>最后还留了个名</p>
+
+<p><img src="22.png" alt="" /></p>
+
+  </div>
+  
   <div class="post">
     <h1 class="post-title">
       <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/">
@@ -251,10 +928,13 @@ var _hmt = _hmt || [];
 
     <span class="post-date">Fri, Apr 1, 2016</span>
 
-    <p>你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。
-  目前，正在将以往的博客文章迁移过来~</p>
+    <p>你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。</p>
 
-<p>我的邮箱：<a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p>
+<p>2016.4.6 完成的博客文章迁移~</p>
+
+<p>我的邮箱: <a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p>
+
+<p>我的Git: <a href="https://github.com/freedomofme">https://github.com/freedomofme</a></p>
 
   </div>
   

@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title> 关于我 &middot; Coder Yel </title>
+  <title> Android获取联系人示例，从数据库加载，带首字母标签 &middot; Coder Yel </title>
 
 <script>
 var _hmt = _hmt || [];
@@ -80,25 +80,48 @@ var _hmt = _hmt || [];
 
 		<div class="content container">
 			<div class="post">
-			 	<h1>关于我</h1>
-			  <span class="post-date">Fri, Apr 1, 2016
+			 	<h1>Android获取联系人示例，从数据库加载，带首字母标签</h1>
+			  <span class="post-date">Wed, Apr 6, 2016
 			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
-        <a href="http://freedomofme.github.io//tags/development">Development&nbsp;&nbsp;</a> 
-      				
-        <a href="http://freedomofme.github.io//tags/golang">golang&nbsp;&nbsp;</a> 
+        <a href="http://freedomofme.github.io//tags/android">Android&nbsp;&nbsp;</a> 
       				
 
 			  </span>
 			  <ul >
       
    				</ul>
-			      <p>你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。</p>
+			      
 
-<p>2016.4.6 完成的博客文章迁移~</p>
+<p>这几天打算学习下Android联系人方面的一些东西，之前稍有涉略，不过每次都是浅尝辄止。</p>
 
-<p>我的邮箱: <a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p>
+<p>推荐国内两个Link：</p>
 
-<p>我的Git: <a href="https://github.com/freedomofme">https://github.com/freedomofme</a></p>
+<p><a href="http://fanfq.iteye.com/blog/779569">Link1</a></p>
+
+<p><a href="http://www.icodelogic.com/?p=453">Link2</a></p>
+
+<p>以上两个都是读取联系人。</p>
+
+<p>第一个Link采用多次查询每次查询一条数据的方式，比较好理解，但是效率底。250条记录（6s）</p>
+
+<p>第二个Link采用的Querying entities，返回数据集，大大减少了查询次数。250条记录（200ms）。因为采用了联接的数据库查询方式（不大熟悉的话可以温习下数据库方面的知识），大大减少了查询次数。</p>
+
+<p>google上有对contacts的比较详细的教材,也有讲到到
+Querying entities：<a href="http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html">http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html</a></p>
+
+<p>推荐《精通Android》书里的介绍也不错</p>
+
+<h3 id="demo:637a22d20c7bd1c4d18680e663810998">Demo</h3>
+
+<p>根据最开始的两个link，做成一个Demo，给大家参考和批评：</p>
+
+<p>Demo下载地址：</p>
+
+<p><a href="http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip">http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip</a></p>
+
+<p>截图如下：</p>
+
+<p><img src="http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png" alt="http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png" /></p>
 
 			</div>
 

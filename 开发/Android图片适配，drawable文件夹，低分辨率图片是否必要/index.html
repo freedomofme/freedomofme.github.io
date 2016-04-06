@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title> 关于我 &middot; Coder Yel </title>
+  <title> Android图片适配，drawable文件夹，低分辨率图片是否必要 &middot; Coder Yel </title>
 
 <script>
 var _hmt = _hmt || [];
@@ -80,25 +80,38 @@ var _hmt = _hmt || [];
 
 		<div class="content container">
 			<div class="post">
-			 	<h1>关于我</h1>
-			  <span class="post-date">Fri, Apr 1, 2016
+			 	<h1>Android图片适配，drawable文件夹，低分辨率图片是否必要</h1>
+			  <span class="post-date">Wed, Apr 6, 2016
 			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
-        <a href="http://freedomofme.github.io//tags/development">Development&nbsp;&nbsp;</a> 
-      				
-        <a href="http://freedomofme.github.io//tags/golang">golang&nbsp;&nbsp;</a> 
+        <a href="http://freedomofme.github.io//tags/android">Android&nbsp;&nbsp;</a> 
       				
 
 			  </span>
 			  <ul >
       
    				</ul>
-			      <p>你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。</p>
+			      <p>我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：</p>
 
-<p>2016.4.6 完成的博客文章迁移~</p>
+<p>xxhdpi:3.0
+xhdpi: 2.0
+hdpi: 1.5
+mdpi: 1.0
+ldpi: 0.75
+于是一个问题产生了：</p>
 
-<p>我的邮箱: <a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p>
+<p>从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？</p>
 
-<p>我的Git: <a href="https://github.com/freedomofme">https://github.com/freedomofme</a></p>
+<p>查了一些资料，终于在Google的开发者网站上找到了解答：
+&gt;
+Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.</p>
+
+<p><a href="http://developer.android.com/training/basics/supporting-devices/screens.html">Link</a></p>
+
+<p>大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。</p>
+
+<p>问题到此就解答完了。</p>
+
+<p>有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？</p>
 
 			</div>
 

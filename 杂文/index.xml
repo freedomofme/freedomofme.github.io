@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>杂文s on Coder Yel</title>
+    <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/</link>
+    <description>Recent content in 杂文s on Coder Yel</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 06 Apr 2016 17:56:45 +0800</lastBuildDate>
+    <atom:link href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>解决mac的日历问题：服务器响应一个错误</title>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</link>
+      <pubDate>Wed, 06 Apr 2016 17:56:45 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</guid>
+      <description>
+
+&lt;p&gt;出了一个问题好久，平时也不用这个同步不靠谱的日历。今晚花点时间解决了下。&lt;/p&gt;
+
+&lt;p&gt;更新：三个月后，因为找到了微软的SunRise这个Android端APP实现Mac， ipad， Android日历共享啦。我就开始用这款软件了。&lt;/p&gt;
+
+&lt;p&gt;参考Apple 官网日历的问题解答。&lt;/p&gt;
+
+&lt;p&gt;当出现如下情况时：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png&#34; alt=&#34;http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;正确的操作步骤:685002b936a4b907022076cedfa8a94e&#34;&gt;正确的操作步骤&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;退出日历和提醒事项。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;从 Apple () 菜单中选取“系统偏好设置”，然后点按“iCloud”。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;点按注记格以取消选中“日历与提醒事项”。在 OS X Mountain Lion 中，取消选中“日历与提醒事项”的单个注记格。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;关闭“系统偏好设置”，再稍等片刻。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;打开“系统偏好设置”，并点按“iCloud”。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;点按注记格以选择“日历与提醒事项”。在 OS X Mountain Lion 中选择“日历与提醒事项”的单个注记格。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;关闭“系统偏好设置”。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;打开“提醒事项”并进行测试，以查看问题是否已解决。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;经过以上操作后可以重启下。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>记第一次翻译For开源社区</title>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91For%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/</link>
+      <pubDate>Wed, 06 Apr 2016 17:46:45 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91For%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/</guid>
+      <description>&lt;p&gt;今晚在用火狐的Firebug，有点问题，去火狐社区找答案，&lt;/p&gt;
+
+&lt;p&gt;结果去了火狐市场，看见了这一幕：&lt;/p&gt;
+
+&lt;p&gt;忘记截图了~(⊙o⊙)…&lt;/p&gt;
+
+&lt;p&gt;其实在两个小时前是这样的，“这个篇文章尚没有中文翻译版”。&lt;/p&gt;
+
+&lt;p&gt;好吧，难得今晚心情不错，就去翻译下吧~~~嘿嘿&lt;/p&gt;
+
+&lt;p&gt;先是注册个了火狐社区的账号，申请做志愿者的翻译工作，随后就挑了这篇文章开始翻译啦~&lt;/p&gt;
+
+&lt;p&gt;花了半个小时时间，把它从英文版变为了中文版~~~&lt;/p&gt;
+
+&lt;p&gt;这是链接：&lt;a href=&#34;https://support.mozilla.org/zh-CN/kb/%E8%8B%B9%E6%9E%9C%E7%94%B5%E8%84%91-%E5%AE%89%E5%85%A8-%E8%AE%BE%E7%BD%AE-%E7%81%AB%E7%8B%90-%E5%BA%94%E7%94%A8%E5%B8%82%E5%9C%BA&#34;&gt;https://support.mozilla.org/zh-CN/kb/%E8%8B%B9%E6%9E%9C%E7%94%B5%E8%84%91-%E5%AE%89%E5%85%A8-%E8%AE%BE%E7%BD%AE-%E7%81%AB%E7%8B%90-%E5%BA%94%E7%94%A8%E5%B8%82%E5%9C%BA&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;翻译的好烂~，人家审核的妹子还通过了~~~感觉不错&lt;/p&gt;
+
+&lt;p&gt;最后还留了个名&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;22.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -6,164 +6,149 @@
     <description>Recent content in Development on Coder Yel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 01 Apr 2016 19:52:07 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 06 Apr 2016 17:59:59 +0800</lastBuildDate>
     <atom:link href="http://freedomofme.github.io/categories/development/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Java重排序和happens-before学习思路</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</link>
-      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
+      <title>仿网易新闻Android端APP实现</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E4%BB%BF%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BBAndroid%E7%AB%AFAPP%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Wed, 06 Apr 2016 17:59:59 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</guid>
-      <description>&lt;p&gt;鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。&lt;/p&gt;
-
-&lt;p&gt;我觉得理解这些概念，比较好的思路是这样的：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;知道什么是重排序？
-&amp;gt; 重排序是编译器和处理器为了优化性能而对指令执行顺序进行重新排序。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;现在你已经知道了什么是重排序，认识下重排序的发生位置：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;编译器重排序&lt;/li&gt;
-&lt;li&gt;指令级并行重排序&lt;/li&gt;
-&lt;li&gt;内存系统重排序&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;理解单线程程序中可能发生指令的重排序&lt;/p&gt;
-
-&lt;p&gt;这就是说在单线程中，编译器也会进行重排序。但是为什么我以前写了这么久单线程的Java程序，都没有发现指令重排序这个问题？&lt;/p&gt;
-
-&lt;p&gt;原因是java遵从as-if-serial语义，即单线程的程序即使发生了重排序，程序的执行结果不能被改变。所以，即使发生了重排序，执行结果是一样的，所以你感觉不到。&lt;/p&gt;
-
-&lt;p&gt;比如说，对于有数据依赖的语句进行重排序，就会改变结果，所以会禁止此种情况的重排序。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;理解happens-before的定义&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;如果一个操作happens-before另一个操作，那么第一个操作的执行结果对第二个操作可见。且第一个操作排在第二个操作之前。&lt;/li&gt;
-&lt;li&gt;两个操作之间存在happens-before关系，如果重排序之后的对执行结果没有影响，也可以重排序。即表明不一定存在这个关系就一定不能重排序。&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;happens-before规则&lt;/p&gt;
-
-&lt;p&gt;这里有6条：程序次序规则；监视器锁规则；volatile规则；传递性规则等等。
-比如：程序次序规则，它要求一个线程中的每个操作，happens-before该线程的任何后续操作。
-这里大家去查阅详细资料。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;此时可能会有一个疑惑，既然多线程程序的先后语句满足happens-before规则中程序次序规则，为什么还会重排序？&lt;/p&gt;
-
-&lt;p&gt;其实这个问题前面已经说了，第4点，在多线程程序中，也是由多个单线程组成的。他们中的每一个线程前后是存在happens-before规则。java以单线程的角度来看待这个问题：java认为对线程中语句进行重排序是不会改变结果的。&lt;/p&gt;
-
-&lt;p&gt;因为java又不知道你这个代码是会在多线程里运行还是单线程里运行，它只保证单线程运行时，重排序后不改变执行结果，当这代码在多线程里运行时就可能出现问题。&lt;/p&gt;
-
-&lt;p&gt;所以我们就需要在多线程中进行正确的同步的一个原因。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;学习volatile语义、锁的语义、和final的语义&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;此时就可惜学习java中的Thread的实现和并发容器的实现&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;总结&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;线程一：a -&amp;gt; b -&amp;gt; c
-线程二：A -&amp;gt; B -&amp;gt; C&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;若没有重排序的结果可能是&lt;/p&gt;
-
-&lt;p&gt;a -&amp;gt; A -&amp;gt; B -&amp;gt; b -&amp;gt; c -&amp;gt; C&lt;/p&gt;
-
-&lt;p&gt;也就是单个线程的顺序不变&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;若发生了重排序结果可能是&lt;/p&gt;
-
-&lt;p&gt;b -&amp;gt; B -&amp;gt; A -&amp;gt; a -&amp;gt; c -&amp;gt; C&lt;/p&gt;
-
-&lt;p&gt;就要分析里面的代码是否有happens-before的关系以及对每个单线程而言的重拍序是否会改变运行结果来分析。&lt;/p&gt;
-
-&lt;p&gt;本文参考：《并发编写的艺术》&lt;/p&gt;
-
-&lt;p&gt;欢迎批评指正：&lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
-      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E4%BB%BF%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BBAndroid%E7%AB%AFAPP%E5%AE%9E%E7%8E%B0/</guid>
       <description>
 
-&lt;p&gt;本文将主要介绍程序的主要计算流程。&lt;/p&gt;
+&lt;h2 id=&#34;主要功能展示和代码实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;主要功能展示和代码实现&lt;/h2&gt;
 
-&lt;p&gt;写作目的：&lt;/p&gt;
+&lt;p&gt;差不多花了一周的时间，目前实现的了新闻下的包括头条、体育、娱乐的一系列的新闻展示，以及点击后进入的新闻详情展示。&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;当然是为了为了加深理解二叉树遍历啦&lt;/li&gt;
-&lt;li&gt;因为受不了笔试题老出这种题目，所以做出来方便大家以后答题O(∩_∩)O~&lt;/li&gt;
-&lt;li&gt;最关键的是，每次遇到这种题目，我只会凑./捂脸&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。&lt;/p&gt;
-
-&lt;h4 id=&#34;由前序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由前序中序推导&lt;/h4&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;已知一棵二叉树的前序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
+&lt;h3 id=&#34;目前效果:0e1910fcdf867805caab27c6340158d2&#34;&gt;目前效果&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;根据前序序列的第一个元素建立根结点；&lt;/li&gt;
-&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
-&lt;li&gt;在前序序列中确定左右子树的前序序列；&lt;/li&gt;
-&lt;li&gt;由左子树的前序序列和中序序列建立左子树；&lt;/li&gt;
-&lt;li&gt;由右子树的前序序列和中序序列建立右子树。&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;目前效果请访问该网页：&lt;a href=&#34;http://www.cnblogs.com/FightForFreedom/p/4807083.html&#34;&gt;http://www.cnblogs.com/FightForFreedom/p/4807083.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;更新：目前新闻内容的详情展示已经实现&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/blockquote&gt;
 
-&lt;h4 id=&#34;由后序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由后序中序推导&lt;/h4&gt;
+&lt;h2 id=&#34;技术实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;技术实现&lt;/h2&gt;
 
-&lt;blockquote&gt;
-&lt;p&gt;已知一棵二叉树的后序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
+&lt;h3 id=&#34;框架实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;框架实现&lt;/h3&gt;
 
-&lt;ul&gt;
-&lt;li&gt;根据后序序列的最后一个元素建立根结点；&lt;/li&gt;
-&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
-&lt;li&gt;在后序序列中确定左右子树的后序序列；&lt;/li&gt;
-&lt;li&gt;由左子树的后序序列和中序序列建立左子树；&lt;/li&gt;
-&lt;li&gt;由右子树的后序序列和中序序列建立右子树。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;APP总体底部的4个Fragment切换和在每个Fragment中的ViewPage切换, 采用的是LuckyJayce/ViewPagerIndicator的开源框架：地址是&lt;a href=&#34;https://github.com/LuckyJayce/ViewPagerIndicator&#34;&gt;https://github.com/LuckyJayce/ViewPagerIndicator&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;引用自：&lt;a href=&#34;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&#34;&gt;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;列表实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;列表实现&lt;/h3&gt;
 
-&lt;h4 id=&#34;核心代码:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;核心代码&lt;/h4&gt;
+&lt;p&gt;新闻列表采用纵向RecyclerView，其中暂时划分为3种类型。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;public static void calPostOrder(String preString, String midString) {
-    if (preString.length() == 0) return;
-    if (preString.length() == 1) {
-        result.add(preString.charAt(0));
-    }
-    if (preString.length() &amp;gt; 1) {
-        //前序首字母拆分中序字符串           
-        String[] resultStrings = midString.split(preString.charAt(0) + &amp;quot;&amp;quot;);
-        for (int i = 0; i &amp;lt; resultStrings.length; i++) {
-            String newPreString = findSubStringInPreORPostString(preString, resultStrings[i]);
-            calPostOrder(newPreString, resultStrings[i]);
-        }
-        result.add(preString.charAt(0));
-    }
+&lt;pre&gt;&lt;code&gt;public static enum ITEM_TYPE {
+    ITEM_TYPE_BANNER,
+    ITEM_TYPE_IMAGE,
+    ITEM_TYPE_TEXT
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;其中findSubStringInPreORPostString()函数就是从先序字符串中取出对应中序的字符串的子串。&lt;/p&gt;
+&lt;p&gt;分别表示以下3种类型：
+- BANNER：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143937664-372953191.png&#34; alt=&#34;&#34; /&gt;
+- TEXT：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143948320-1282950477.png&#34; alt=&#34;&#34; /&gt;
+- IMAGE：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143954336-1896838803.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中ITEM_TYPE_BANNER 采用SwitchImage单独控件形式（内部ViewPage实现
+ITEM_TYPE_TEXT比较简单，
+ITEM_TYPE_IMAGE的网易原版实现是3张图片。&lt;/p&gt;
+
+&lt;h3 id=&#34;列表改进:0e1910fcdf867805caab27c6340158d2&#34;&gt;列表改进&lt;/h3&gt;
+
+&lt;p&gt;为了增加用户体验，决定替换掉ITEM_TYPE_IMAGE中三种图片，改为水平滑动形式。
+现已实现了水平滑动和按钮点击响应：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914144420304-1934370299.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;当点击任意一张图片后将调转到ImageDisplayActivity：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914152234539-499422592.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;下面我将着重描述下ITEM_TYPE_IMAGE的水平滑动实现。&lt;/p&gt;
+
+&lt;p&gt;想到水平滑动，我想大家肯定会想到这些控件：ViewPage，Gallery，HorizontalScrollview等等。&lt;/p&gt;
+
+&lt;p&gt;不过，Google近来推出的RecyclerView也支持水平滑动，那就用它来试试。&lt;/p&gt;
+
+&lt;p&gt;首先，垂直RecyclerView嵌入水平RecyclerView比较顺利，没有出现子列表只显示一行之类的问题，同时对水平RecyclerView滑动也没有出现问题。&lt;/p&gt;
+
+&lt;p&gt;但是当我想对水平RecyclerView中的某张图片进行点击时，出现了onClick函数没有回调的问题，由于笔者水平和时间有限，暂时没有深究这个问题。&lt;/p&gt;
+
+&lt;p&gt;于是采用了onTouch函数做点击响应的回调, 做了如下简单的判断：&lt;/p&gt;
+
+&lt;p&gt;用户是点击图片还是水平滑动RecyclerIView&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;imageView.setOnTouchListener(new View.OnTouchListener() {
+  @Override
+ public boolean onTouch(View v, MotionEvent event) {
+  //抬起按钮时判断，之前是否滑动了,若没有滑动则响应点击事件
+                if (event.getAction() == MotionEvent.ACTION_UP &amp;amp;&amp;amp; !isMoved)
+                    mListener.onViewPageTouch((NetworkImageView) v, index);
+                else {
+                    isMoved = false;
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    isMoved = true;
+                }
+                return true;
+            }
+        });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;顶部沉浸式状态栏实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;顶部沉浸式状态栏实现&lt;/h3&gt;
+
+&lt;p&gt;参考了这篇文章：
+&lt;a href=&#34;http://www.jianshu.com/p/f8374d6267ef&#34;&gt;http://www.jianshu.com/p/f8374d6267ef&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;新闻详情实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;新闻详情实现&lt;/h3&gt;
+
+&lt;p&gt;首先，根据网络返回的数据的样式确定解析方案：&lt;/p&gt;
+
+&lt;p&gt;NewsDisplayActivity.java第70行，展示了一个返回数据Html格式的样例：&lt;a href=&#34;https://github.com/freedomofme/Netease/commit/bb6db85de547d4d5243e17e881bc2116122e52d6&#34;&gt;https://github.com/freedomofme/Netease/commit/bb6db85de547d4d5243e17e881bc2116122e52d6&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文采用的方法是通过Android自带的android.text.Html类解析Html和html下&lt;img&gt;标签的图像。
+核心代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    URLImageParser p = new URLImageParser(content, this);
+    Spanned htmlSpan = Html.fromHtml(body, p, null);
+    content.setText(htmlSpan);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中的URLImageParser是用来解析&lt;img&gt;标签的，这里有很大的进一步优化的空间。&lt;/p&gt;
+
+&lt;p&gt;这类主要是参考该文，并修正了图片尺寸上的问题。&lt;a href=&#34;http://stackoverflow.com/questions/15617210/android-html-fromhtml-with-images/15617341#15617341&#34;&gt;http://stackoverflow.com/questions/15617210/android-html-fromhtml-with-images/15617341#15617341&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;当然，除了用TextView来展示Html（在Android
+中就是Spanned类），也可以使用WebView。
+两者的主要区别：
+* WebView：加载HTML更为方便（笔者觉得），支持的标签更多，与APP交互需要通过JS接口
+* TextView： 除了文本显示，对于其他很多交互行为，需要重写函数。开发者对展示细节的控制能力更强。
+详细内容可以参考:&lt;a href=&#34;https://www.ibm.com/developerworks/cn/web/1407_zhangqian_androidhtml/&#34;&gt;这里&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;数据网络请求:0e1910fcdf867805caab27c6340158d2&#34;&gt;数据网络请求&lt;/h3&gt;
+
+&lt;p&gt;采用的是Volley框架，并封装了RequestSingletonFactory工厂类来方便请求。
+URLs类中采用反射的方式来读取静态URL的数据。&lt;/p&gt;
+
+&lt;h3 id=&#34;接下来:0e1910fcdf867805caab27c6340158d2&#34;&gt;接下来&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;完善新闻阅读的排版，对于部分网页存在数据不兼容，导致解析的Bug&lt;/li&gt;
+&lt;li&gt;增加查看新闻评论功能&lt;/li&gt;
+&lt;li&gt;增加用户设置界面&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;下载地址:0e1910fcdf867805caab27c6340158d2&#34;&gt;下载地址&lt;/h3&gt;
+
+&lt;p&gt;本项目将在持续更新，更加完善，项目源码地址：
+&lt;a href=&#34;https://github.com/freedomofme/Netease&#34;&gt;https://github.com/freedomofme/Netease&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://files.cnblogs.com/files/FightForFreedom/app-release.apk&#34;&gt;APK安装包下载&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本开源项目仅供学习，不得作为其他用途&lt;/p&gt;
 </description>
     </item>
     
@@ -173,10 +158,13 @@
       <pubDate>Fri, 01 Apr 2016 15:21:43 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/aboutme/</guid>
-      <description>&lt;p&gt;你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。
-  目前，正在将以往的博客文章迁移过来~&lt;/p&gt;
+      <description>&lt;p&gt;你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。&lt;/p&gt;
 
-&lt;p&gt;我的邮箱：&lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2016.4.6 完成的博客文章迁移~&lt;/p&gt;
+
+&lt;p&gt;我的邮箱: &lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我的Git: &lt;a href=&#34;https://github.com/freedomofme&#34;&gt;https://github.com/freedomofme&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

@@ -6,8 +6,508 @@
     <description>Recent content in Android on Coder Yel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 01 Apr 2016 19:52:07 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 06 Apr 2016 17:59:59 +0800</lastBuildDate>
     <atom:link href="http://freedomofme.github.io/categories/android/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>仿网易新闻Android端APP实现</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E4%BB%BF%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BBAndroid%E7%AB%AFAPP%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Wed, 06 Apr 2016 17:59:59 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E4%BB%BF%E7%BD%91%E6%98%93%E6%96%B0%E9%97%BBAndroid%E7%AB%AFAPP%E5%AE%9E%E7%8E%B0/</guid>
+      <description>
+
+&lt;h2 id=&#34;主要功能展示和代码实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;主要功能展示和代码实现&lt;/h2&gt;
+
+&lt;p&gt;差不多花了一周的时间，目前实现的了新闻下的包括头条、体育、娱乐的一系列的新闻展示，以及点击后进入的新闻详情展示。&lt;/p&gt;
+
+&lt;h3 id=&#34;目前效果:0e1910fcdf867805caab27c6340158d2&#34;&gt;目前效果&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;目前效果请访问该网页：&lt;a href=&#34;http://www.cnblogs.com/FightForFreedom/p/4807083.html&#34;&gt;http://www.cnblogs.com/FightForFreedom/p/4807083.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;更新：目前新闻内容的详情展示已经实现&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;技术实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;技术实现&lt;/h2&gt;
+
+&lt;h3 id=&#34;框架实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;框架实现&lt;/h3&gt;
+
+&lt;p&gt;APP总体底部的4个Fragment切换和在每个Fragment中的ViewPage切换, 采用的是LuckyJayce/ViewPagerIndicator的开源框架：地址是&lt;a href=&#34;https://github.com/LuckyJayce/ViewPagerIndicator&#34;&gt;https://github.com/LuckyJayce/ViewPagerIndicator&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;列表实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;列表实现&lt;/h3&gt;
+
+&lt;p&gt;新闻列表采用纵向RecyclerView，其中暂时划分为3种类型。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public static enum ITEM_TYPE {
+    ITEM_TYPE_BANNER,
+    ITEM_TYPE_IMAGE,
+    ITEM_TYPE_TEXT
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;分别表示以下3种类型：
+- BANNER：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143937664-372953191.png&#34; alt=&#34;&#34; /&gt;
+- TEXT：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143948320-1282950477.png&#34; alt=&#34;&#34; /&gt;
+- IMAGE：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914143954336-1896838803.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中ITEM_TYPE_BANNER 采用SwitchImage单独控件形式（内部ViewPage实现
+ITEM_TYPE_TEXT比较简单，
+ITEM_TYPE_IMAGE的网易原版实现是3张图片。&lt;/p&gt;
+
+&lt;h3 id=&#34;列表改进:0e1910fcdf867805caab27c6340158d2&#34;&gt;列表改进&lt;/h3&gt;
+
+&lt;p&gt;为了增加用户体验，决定替换掉ITEM_TYPE_IMAGE中三种图片，改为水平滑动形式。
+现已实现了水平滑动和按钮点击响应：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914144420304-1934370299.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;当点击任意一张图片后将调转到ImageDisplayActivity：
+&lt;img src=&#34;http://images2015.cnblogs.com/blog/739642/201509/739642-20150914152234539-499422592.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;下面我将着重描述下ITEM_TYPE_IMAGE的水平滑动实现。&lt;/p&gt;
+
+&lt;p&gt;想到水平滑动，我想大家肯定会想到这些控件：ViewPage，Gallery，HorizontalScrollview等等。&lt;/p&gt;
+
+&lt;p&gt;不过，Google近来推出的RecyclerView也支持水平滑动，那就用它来试试。&lt;/p&gt;
+
+&lt;p&gt;首先，垂直RecyclerView嵌入水平RecyclerView比较顺利，没有出现子列表只显示一行之类的问题，同时对水平RecyclerView滑动也没有出现问题。&lt;/p&gt;
+
+&lt;p&gt;但是当我想对水平RecyclerView中的某张图片进行点击时，出现了onClick函数没有回调的问题，由于笔者水平和时间有限，暂时没有深究这个问题。&lt;/p&gt;
+
+&lt;p&gt;于是采用了onTouch函数做点击响应的回调, 做了如下简单的判断：&lt;/p&gt;
+
+&lt;p&gt;用户是点击图片还是水平滑动RecyclerIView&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;imageView.setOnTouchListener(new View.OnTouchListener() {
+  @Override
+ public boolean onTouch(View v, MotionEvent event) {
+  //抬起按钮时判断，之前是否滑动了,若没有滑动则响应点击事件
+                if (event.getAction() == MotionEvent.ACTION_UP &amp;amp;&amp;amp; !isMoved)
+                    mListener.onViewPageTouch((NetworkImageView) v, index);
+                else {
+                    isMoved = false;
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    isMoved = true;
+                }
+                return true;
+            }
+        });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;顶部沉浸式状态栏实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;顶部沉浸式状态栏实现&lt;/h3&gt;
+
+&lt;p&gt;参考了这篇文章：
+&lt;a href=&#34;http://www.jianshu.com/p/f8374d6267ef&#34;&gt;http://www.jianshu.com/p/f8374d6267ef&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;新闻详情实现:0e1910fcdf867805caab27c6340158d2&#34;&gt;新闻详情实现&lt;/h3&gt;
+
+&lt;p&gt;首先，根据网络返回的数据的样式确定解析方案：&lt;/p&gt;
+
+&lt;p&gt;NewsDisplayActivity.java第70行，展示了一个返回数据Html格式的样例：&lt;a href=&#34;https://github.com/freedomofme/Netease/commit/bb6db85de547d4d5243e17e881bc2116122e52d6&#34;&gt;https://github.com/freedomofme/Netease/commit/bb6db85de547d4d5243e17e881bc2116122e52d6&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文采用的方法是通过Android自带的android.text.Html类解析Html和html下&lt;img&gt;标签的图像。
+核心代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    URLImageParser p = new URLImageParser(content, this);
+    Spanned htmlSpan = Html.fromHtml(body, p, null);
+    content.setText(htmlSpan);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中的URLImageParser是用来解析&lt;img&gt;标签的，这里有很大的进一步优化的空间。&lt;/p&gt;
+
+&lt;p&gt;这类主要是参考该文，并修正了图片尺寸上的问题。&lt;a href=&#34;http://stackoverflow.com/questions/15617210/android-html-fromhtml-with-images/15617341#15617341&#34;&gt;http://stackoverflow.com/questions/15617210/android-html-fromhtml-with-images/15617341#15617341&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;当然，除了用TextView来展示Html（在Android
+中就是Spanned类），也可以使用WebView。
+两者的主要区别：
+* WebView：加载HTML更为方便（笔者觉得），支持的标签更多，与APP交互需要通过JS接口
+* TextView： 除了文本显示，对于其他很多交互行为，需要重写函数。开发者对展示细节的控制能力更强。
+详细内容可以参考:&lt;a href=&#34;https://www.ibm.com/developerworks/cn/web/1407_zhangqian_androidhtml/&#34;&gt;这里&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;数据网络请求:0e1910fcdf867805caab27c6340158d2&#34;&gt;数据网络请求&lt;/h3&gt;
+
+&lt;p&gt;采用的是Volley框架，并封装了RequestSingletonFactory工厂类来方便请求。
+URLs类中采用反射的方式来读取静态URL的数据。&lt;/p&gt;
+
+&lt;h3 id=&#34;接下来:0e1910fcdf867805caab27c6340158d2&#34;&gt;接下来&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;完善新闻阅读的排版，对于部分网页存在数据不兼容，导致解析的Bug&lt;/li&gt;
+&lt;li&gt;增加查看新闻评论功能&lt;/li&gt;
+&lt;li&gt;增加用户设置界面&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;下载地址:0e1910fcdf867805caab27c6340158d2&#34;&gt;下载地址&lt;/h3&gt;
+
+&lt;p&gt;本项目将在持续更新，更加完善，项目源码地址：
+&lt;a href=&#34;https://github.com/freedomofme/Netease&#34;&gt;https://github.com/freedomofme/Netease&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://files.cnblogs.com/files/FightForFreedom/app-release.apk&#34;&gt;APK安装包下载&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本开源项目仅供学习，不得作为其他用途&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Android获取联系人示例，从数据库加载，带首字母标签</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E8%8E%B7%E5%8F%96%E8%81%94%E7%B3%BB%E4%BA%BA%E7%A4%BA%E4%BE%8B%EF%BC%8C%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E8%BD%BD%EF%BC%8C%E5%B8%A6%E9%A6%96%E5%AD%97%E6%AF%8D%E6%A0%87%E7%AD%BE/</link>
+      <pubDate>Wed, 06 Apr 2016 17:59:26 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E8%8E%B7%E5%8F%96%E8%81%94%E7%B3%BB%E4%BA%BA%E7%A4%BA%E4%BE%8B%EF%BC%8C%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E8%BD%BD%EF%BC%8C%E5%B8%A6%E9%A6%96%E5%AD%97%E6%AF%8D%E6%A0%87%E7%AD%BE/</guid>
+      <description>
+
+&lt;p&gt;这几天打算学习下Android联系人方面的一些东西，之前稍有涉略，不过每次都是浅尝辄止。&lt;/p&gt;
+
+&lt;p&gt;推荐国内两个Link：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://fanfq.iteye.com/blog/779569&#34;&gt;Link1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.icodelogic.com/?p=453&#34;&gt;Link2&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;以上两个都是读取联系人。&lt;/p&gt;
+
+&lt;p&gt;第一个Link采用多次查询每次查询一条数据的方式，比较好理解，但是效率底。250条记录（6s）&lt;/p&gt;
+
+&lt;p&gt;第二个Link采用的Querying entities，返回数据集，大大减少了查询次数。250条记录（200ms）。因为采用了联接的数据库查询方式（不大熟悉的话可以温习下数据库方面的知识），大大减少了查询次数。&lt;/p&gt;
+
+&lt;p&gt;google上有对contacts的比较详细的教材,也有讲到到
+Querying entities：&lt;a href=&#34;http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html&#34;&gt;http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;推荐《精通Android》书里的介绍也不错&lt;/p&gt;
+
+&lt;h3 id=&#34;demo:637a22d20c7bd1c4d18680e663810998&#34;&gt;Demo&lt;/h3&gt;
+
+&lt;p&gt;根据最开始的两个link，做成一个Demo，给大家参考和批评：&lt;/p&gt;
+
+&lt;p&gt;Demo下载地址：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip&#34;&gt;http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;截图如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png&#34; alt=&#34;http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>关于Android的ListView中CheckBox错乱</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8EAndroid%E7%9A%84ListView%E4%B8%ADCheckBox%E9%94%99%E4%B9%B1/</link>
+      <pubDate>Wed, 06 Apr 2016 17:57:45 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8EAndroid%E7%9A%84ListView%E4%B8%ADCheckBox%E9%94%99%E4%B9%B1/</guid>
+      <description>
+
+&lt;p&gt;本文参考：
+&amp;gt; &lt;a href=&#34;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&#34;&gt;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;上文中关于说的Android中的Recycler比较模糊，Android会维持屏幕中显示的item+1个对象。但是复用的时候选择哪个对象来复用的机制并不明确，具体用的是什么数据结构，求告知。。。肯定不是简单的FIFO或LIFO。&lt;/p&gt;
+
+&lt;h3 id=&#34;关于checkbox-选中了之后-下滑之后返回就消失的问题:26155ffc16647da895c63731007e82b8&#34;&gt;关于checkBox，选中了之后，下滑之后返回就消失的问题。&lt;/h3&gt;
+
+&lt;p&gt;有以下两种方式供大家参考：&lt;/p&gt;
+
+&lt;p&gt;data是给TextView显示的数据&lt;/p&gt;
+
+&lt;p&gt;isChecked是用来记录CheckBox是否选中的。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ArrayList&amp;lt;String&amp;gt; data;
+ArrayList&amp;lt;Boolean&amp;gt; isChecked;
+ class Holder {
+        TextView name;
+        CheckBox box;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　&lt;/p&gt;
+
+&lt;h4 id=&#34;方法一:26155ffc16647da895c63731007e82b8&#34;&gt;方法一：&lt;/h4&gt;
+
+&lt;p&gt;用onClickedListener,使用这个监听器可以简单的避开CheckedBox选中消失的问题。&lt;/p&gt;
+
+&lt;p&gt;其中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;holder.box.setTag(i);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;用来给监听器指明选择的索引。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        if(view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+            holder = new Holder();
+            holder.box = (CheckBox) view.findViewById(R.id.cb_isChecked);
+            holder.name = (TextView) view.findViewById(R.id.tv_name);
+            view.setTag(holder);
+        } else {
+            holder = (Holder) view.getTag();
+        }
+        holder.name.setText(data.get(i));
+        System.out.println(&amp;quot;即将改变成&amp;quot; + isChecked.get(i) + &amp;quot;i&amp;quot; + i);
+        holder.box.setChecked(isChecked.get(i));
+　　
+        holder.box.setTag(i);
+        holder.box.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean hold = isChecked.get((Integer) view.getTag());
+                isChecked.set((Integer) view.getTag(), !hold);
+                System.out.println(&amp;quot;compoundButton.getTag()&amp;quot; + view.getTag());
+            }
+        });
+        return view;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;方法二:26155ffc16647da895c63731007e82b8&#34;&gt;方法二：&lt;/h4&gt;
+
+&lt;p&gt;继续使用onCheckedListener这个监听器，需要注意一些问题。&lt;/p&gt;
+
+&lt;p&gt;代码：和上面的一样，就是把onClickListener改成onCheckedlistener，结果就出现了选中消失的问题。&lt;/p&gt;
+
+&lt;p&gt;仔细看了在logcat中看了输出的结果，发现问题的所在：&lt;/p&gt;
+
+&lt;p&gt;当我们选中一个item时，假设此时item1被选中，下拉列表，到时item1隐藏，item10出现，并复用了item1的结构。&lt;/p&gt;
+
+&lt;p&gt;由于在getView函数中item10被赋值是false，此时，onCheckedListener监听器响应了（如果使用onClickedListener就没有以下问题，因为它再此时不会响应）。&lt;/p&gt;
+
+&lt;p&gt;问题来了：&lt;/p&gt;
+
+&lt;p&gt;因为在onCheckedListener根据view.getTag()来获得索引，而此时的索引是1，就是item1对象时setTag时留下的。&lt;/p&gt;
+
+&lt;p&gt;最终导致此时监听器把用来存储布尔值的线性表的索引1的位置赋值成了item10的值。&lt;/p&gt;
+
+&lt;p&gt;根据问题的成因，我们需要在 onCheckedListener响应前，让view.getTag()获得正确的索引。&lt;/p&gt;
+
+&lt;p&gt;其实很简单只需要将&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;holder.box.setTag(i);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;放到&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;holder.box.setChecked(isChecked.get(i));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;前面就可以了。
+  此解决方案的完整代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class ListAdapter2 extends BaseAdapter {
+    ArrayList&amp;lt;String&amp;gt; data;
+    ArrayList&amp;lt;Boolean&amp;gt; isChecked;
+    Context context;
+    Holder holder;
+    public ListAdapter2(Context context, ArrayList&amp;lt;String&amp;gt; data, ArrayList&amp;lt;Boolean&amp;gt; isChecked) {
+        this.context = context;
+        this.data = data;
+        this.isChecked = isChecked;
+    }
+
+@Override
+public int getCount() {
+    return data.size();
+}
+
+@Override
+public Object getItem(int i) {
+    return data.get(i);
+}
+
+@Override
+public long getItemId(int i) {
+    return i;
+}
+
+@Override
+public View getView(int i, View view, ViewGroup viewGroup) {
+    if(view == null) {
+        view = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+        holder = new Holder();
+        holder.box = (CheckBox) view.findViewById(R.id.cb_isChecked);
+        holder.name = (TextView) view.findViewById(R.id.tv_name);
+        view.setTag(holder);
+
+    } else {
+        holder = (Holder) view.getTag();
+    }
+
+    holder.name.setText(data.get(i));
+    System.out.println(&amp;quot;即将改变成&amp;quot; + isChecked.get(i) + &amp;quot;i&amp;quot; + i);
+    holder.box.setTag(i);
+
+    holder.box.setChecked(isChecked.get(i));
+
+    holder.box.setOnCheckedChangeListener(new CheckedListener());
+    return view;
+}
+
+class CheckedListener implements CompoundButton.OnCheckedChangeListener {
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        isChecked.set((Integer) compoundButton.getTag(), b);
+    }
+}
+
+class Holder {
+    TextView name;
+    CheckBox box;
+}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　
+　　&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Android 图像压缩，和LRU算法使用的推荐链接</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</link>
+      <pubDate>Wed, 06 Apr 2016 17:54:06 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</guid>
+      <description>&lt;p&gt;近两日，看的关于这些方面的一些教程数十篇，最好的当属google原版的教程了。国内有不少文章是翻译这个链接的。&lt;/p&gt;
+
+&lt;p&gt;需要注意的一点是：Android的SDK中的LRU算法在V4包和Util包中各有一个，推荐使用V4包中的。&lt;/p&gt;
+
+&lt;p&gt;在此，推荐两个链接：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&#34;&gt;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&#34;&gt;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;其中，第二个链接是对第一个链接所讲内容的例子演示，下载地址我已经clone到我的github上了，看了会对内容理解的更加深刻，强烈欢迎下载。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/freedomofme/android-imagedownloader&#34;&gt;https://github.com/freedomofme/android-imagedownloader&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Anroid自定义RatingBar，显示半个（小数个）的stepSize时，变为整数个的问题</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Anroid%E8%87%AA%E5%AE%9A%E4%B9%89RatingBar%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%8D%8A%E4%B8%AA%EF%BC%88%E5%B0%8F%E6%95%B0%E4%B8%AA%EF%BC%89%E7%9A%84stepSize%E6%97%B6%EF%BC%8C%E5%8F%98%E4%B8%BA%E6%95%B4%E6%95%B0%E4%B8%AA%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Wed, 06 Apr 2016 17:52:06 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Anroid%E8%87%AA%E5%AE%9A%E4%B9%89RatingBar%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%8D%8A%E4%B8%AA%EF%BC%88%E5%B0%8F%E6%95%B0%E4%B8%AA%EF%BC%89%E7%9A%84stepSize%E6%97%B6%EF%BC%8C%E5%8F%98%E4%B8%BA%E6%95%B4%E6%95%B0%E4%B8%AA%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;p&gt;&lt;RatingBar
+        android:id=&#34;@+id/rb_starbar&#34;
+        style=&#34;@style/joblist_item_ratingbar_style&#34;
+        android:layout_width=&#34;wrap_content&#34;
+        android:layout_height=&#34;wrap_content&#34;
+        android:isIndicator=&#34;false&#34;
+        android:numStars=&#34;5&#34;
+        android:rating=&#34;3.5&#34;
+        android:stepSize=&#34;0.5&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;RatingBar一般都是显示整数个数的，这次因为要显示半个的Star，就把之前的样式改了一改，结果，出现了问题：&lt;/p&gt;
+
+&lt;p&gt;无论怎么设置setpSize的值，每次显示的Star都是整个的。。
+当使用以下样式时：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;item
+    android:id=&amp;quot;@+android:id/background&amp;quot;
+    android:drawable=&amp;quot;@drawable/ic_gray&amp;quot;&amp;gt;
+&amp;lt;/item&amp;gt;
+&amp;lt;item
+    android:id=&amp;quot;@+android:id/secondaryProgress&amp;quot;
+    android:drawable=&amp;quot;@drawable/ic_orange&amp;quot;&amp;gt;
+&amp;lt;/item&amp;gt;
+&amp;lt;item
+    android:id=&amp;quot;@+android:id/progress&amp;quot;
+    android:drawable=&amp;quot;@drawable/ic_orange&amp;quot;&amp;gt;
+&amp;lt;/item&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ic_orange：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://images0.cnblogs.com/blog2015/739642/201505/310034043608696.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ic_gray：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://images0.cnblogs.com/blog2015/739642/201505/310034363138191.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ic_setting：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://images0.cnblogs.com/blog2015/739642/201505/310034509383960.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;结果是这样的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://images0.cnblogs.com/blog2015/739642/201505/310023291579837.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;为什么没有显示3.5个Star(=@__@=)？看了下Google的文档解释：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;android:secondaryProgress Defines the secondary progress value, between 0 and max.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;接下来替换secondaryProgress的drawable，看下结果：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  &amp;lt;item
+        android:id=&amp;quot;@+android:id/secondaryProgress&amp;quot;
+        android:drawable=&amp;quot;@drawable/ic_setting&amp;quot;&amp;gt;
+  &amp;lt;/item&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果如下：
+&lt;img src=&#34;http://images0.cnblogs.com/blog2015/739642/201505/310027290631131.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此处的secondaryProgress会向上取整(Math.cell())的显示图像。&lt;/p&gt;
+
+&lt;p&gt;如此，一开始的问题也就迎刃而解了。&lt;/p&gt;
+
+&lt;p&gt;以下为正确的XML文件配置代码：&lt;/p&gt;
+
+&lt;p&gt;（下面的secondaryProgress部分和第一个secondaryProgress，已经调换的drawable。）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;item
+    android:id=&amp;quot;@+android:id/background&amp;quot;
+    android:drawable=&amp;quot;@drawable/ic_gray&amp;quot;&amp;gt;
+&amp;lt;/item&amp;gt;
+&amp;lt;item
+    android:id=&amp;quot;@+android:id/secondaryProgress&amp;quot;
+    android:drawable=&amp;quot;@drawable/ic_gray&amp;quot;&amp;gt;
+&amp;lt;/item&amp;gt;
+&amp;lt;item
+    android:id=&amp;quot;@+android:id/progress&amp;quot;
+    android:drawable=&amp;quot;@drawable/ic_orang&amp;quot;&amp;gt;
+&amp;lt;/item&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Android图片适配，drawable文件夹，低分辨率图片是否必要</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</link>
+      <pubDate>Wed, 06 Apr 2016 17:50:06 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</guid>
+      <description>&lt;p&gt;我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：&lt;/p&gt;
+
+&lt;p&gt;xxhdpi:3.0
+xhdpi: 2.0
+hdpi: 1.5
+mdpi: 1.0
+ldpi: 0.75
+于是一个问题产生了：&lt;/p&gt;
+
+&lt;p&gt;从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？&lt;/p&gt;
+
+&lt;p&gt;查了一些资料，终于在Google的开发者网站上找到了解答：
+&amp;gt;
+Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://developer.android.com/training/basics/supporting-devices/screens.html&#34;&gt;Link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。&lt;/p&gt;
+
+&lt;p&gt;问题到此就解答完了。&lt;/p&gt;
+
+&lt;p&gt;有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>

@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title> 关于我 &middot; Coder Yel </title>
+  <title> 字符集乱码问题:ISO-8859-1和GBK &middot; Coder Yel </title>
 
 <script>
 var _hmt = _hmt || [];
@@ -80,25 +80,41 @@ var _hmt = _hmt || [];
 
 		<div class="content container">
 			<div class="post">
-			 	<h1>关于我</h1>
-			  <span class="post-date">Fri, Apr 1, 2016
+			 	<h1>字符集乱码问题:ISO-8859-1和GBK</h1>
+			  <span class="post-date">Wed, Apr 6, 2016
 			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
-        <a href="http://freedomofme.github.io//tags/development">Development&nbsp;&nbsp;</a> 
-      				
-        <a href="http://freedomofme.github.io//tags/golang">golang&nbsp;&nbsp;</a> 
+        <a href="http://freedomofme.github.io//tags/java">Java&nbsp;&nbsp;</a> 
       				
 
 			  </span>
 			  <ul >
       
    				</ul>
-			      <p>你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。</p>
+			      
 
-<p>2016.4.6 完成的博客文章迁移~</p>
+<p>首先引用百度知道的问题：
+&gt;
+[<a href="http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81](">http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81](</a>)</p>
 
-<p>我的邮箱: <a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p>
+<p>即：出现了以下字符乱码
+ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡
+如何解决？</p>
 
-<p>我的Git: <a href="https://github.com/freedomofme">https://github.com/freedomofme</a></p>
+<h3 id="方法一:e4ec21571305cc652d1ed9bd63a35f48">方法一：</h3>
+
+<p>String s_iso88591 = new String(&ldquo;ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡ &ldquo;.getBytes(&ldquo;ISO-8859-1&rdquo;),&ldquo;GBK&rdquo;);
+输出s_iso88591即可。</p>
+
+<h3 id="方法二:e4ec21571305cc652d1ed9bd63a35f48">方法二：</h3>
+
+<p>String testString = &ldquo;你好&rdquo;;
+byte[] hold = testString.getBytes(&ldquo;GBK&rdquo;);
+for (int i = 0 ; i &lt; hold.length; i++) {
+System.out.println((char)(256 + hold[i]));
+}
+输出: ÄãºÃ</p>
+
+<p>由此可见好好理解字符集还是相当必要的。</p>
 
 			</div>
 
