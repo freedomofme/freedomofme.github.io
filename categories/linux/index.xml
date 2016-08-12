@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Golang on Coder Yel</title>
-    <link>http://freedomofme.github.io/tags/golang/</link>
-    <description>Recent content in Golang on Coder Yel</description>
+    <title>Linux on Coder Yel</title>
+    <link>http://freedomofme.github.io/categories/linux/</link>
+    <description>Recent content in Linux on Coder Yel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 13 Aug 2016 01:59:36 +0800</lastBuildDate>
-    <atom:link href="http://freedomofme.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://freedomofme.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>记Screen命令简单流程</title>
@@ -59,22 +59,6 @@
 
 &lt;p&gt;详细记载请见IBM的developerworks资料库：
 &lt;a href=&#34;https://www.ibm.com/developerworks/cn/aix/library/au-gnu_screen/&#34;&gt;https://www.ibm.com/developerworks/cn/aix/library/au-gnu_screen/&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>关于我</title>
-      <link>http://freedomofme.github.io/aboutme/</link>
-      <pubDate>Fri, 01 Apr 2016 15:21:43 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/aboutme/</guid>
-      <description>&lt;p&gt;你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。&lt;/p&gt;
-
-&lt;p&gt;2016.4.6 完成的博客文章迁移~&lt;/p&gt;
-
-&lt;p&gt;我的邮箱: &lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;我的Git: &lt;a href=&#34;https://github.com/freedomofme&#34;&gt;https://github.com/freedomofme&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
