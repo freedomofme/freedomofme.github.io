@@ -19,9 +19,10 @@
 
 &lt;p&gt;一直以来，都觉得Java和Native C的通信没有比较全面直观的教程，知道前几天看见一个大牛的总结。所以接着这个机会，对JNI调用做一些简单记录：&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;* JNI的两种注册机制
-* 较大型项目JNI的开发框架
-&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;JNI的两种注册机制&lt;/li&gt;
+&lt;li&gt;较大型项目JNI的开发框架&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h3 id=&#34;jni:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;JNI&lt;/h3&gt;
 
