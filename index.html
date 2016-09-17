@@ -70,6 +70,8 @@ var _hmt = _hmt || [];
     
 
       
+        <li><a  href="/%E5%BC%80%E5%8F%91/demoOfJniRegister/"> JNI静态与动态注册介绍以及Demo实现 </a></li>
+      
         <li><a  href="/aboutme/"> 关于我 </a></li>
       
     </ul>
@@ -86,6 +88,221 @@ var _hmt = _hmt || [];
 <div class="posts">
 
       
+  <div class="post">
+    <h1 class="post-title">
+      <a href="http://freedomofme.github.io/%E5%BC%80%E5%8F%91/demoOfJniRegister/">
+        JNI静态与动态注册介绍以及Demo实现
+      </a>
+    </h1>
+
+    <span class="post-date">Sat, Sep 17, 2016</span>
+
+    
+
+<p>一直以来，都觉得Java和Native C的通信没有比较全面直观的教程，知道前几天看见一个大牛的总结。所以接着这个机会，对JNI调用做一些简单记录：</p>
+
+<pre><code>* JNI的两种注册机制
+* 较大型项目JNI的开发框架
+</code></pre>
+
+<h3 id="jni:2848143d4f7cd8cc66ecf3924bd7d3e0">JNI</h3>
+
+<p>JNI是Java和C进行混合编程的桥梁，其中的核心点就是在Java层声明的Native方法，如何在C层中找到对应的实现。</p>
+
+<ol>
+<li>静态注册<br /></li>
+<li>动态注册，需要提供Java中Native方法的方法签名和Native层中对应的实现函数。</li>
+</ol>
+
+<h4 id="静态注册:2848143d4f7cd8cc66ecf3924bd7d3e0">静态注册</h4>
+
+<p>要求C/C++层的函数名符合某种特定的要求:</p>
+
+<ul>
+<li>包含Java中Native方法的目录信息和方法名</li>
+</ul>
+
+<p>举个栗子：
+假如以下是StaticTest.java 类代码：</p>
+
+<pre><code>package jnicourse.hhx.com.jnidemo;
+
+/**
+* Created by CodeYel on 16/9/17.
+*/
+public class StaticTest {
+    public native int doAdd(int param1,int param2);
+}
+</code></pre>
+
+<p>这对应的C++中jnicourse_hhx_com_jnidemo_StaticTest.h的函数名是：</p>
+
+<pre><code>/*
+* Class:     jnicourse_hhx_com_jnidemo_StaticTest
+* Method:    doAdd
+* Signature: (II)I
+*/
+JNIEXPORT jint JNICALL Java_jnicourse_hhx_com_jnidemo_StaticTest_doAdd (JNIEnv *, jobject, jint, jint);
+</code></pre>
+
+<p>按照以上规则进行命名就，在调用到Native的方法时,JVM会去查找是否存在对应函数名的函数，以此实现静态注册。</p>
+
+<p>附带礼品：NDK提供了javap命令来方便根据.java文件来生成.h。
+假如你使用AS作为你的IDE，你可以自定义扩展工具，如下图所示：</p>
+
+<p><img src="demoOfJniRegister_1.png" alt="" /></p>
+
+<p><img src="demoOfJniRegister_2.png" alt="" /></p>
+
+<p>使用方法：在包含Native声明的方法的文件上右键，选择External Tool中的Javap工具。</p>
+
+<h4 id="动态注册:2848143d4f7cd8cc66ecf3924bd7d3e0">动态注册</h4>
+
+<p>动态注册相对于静态注册，优点是不再根据特定路径查找函数的实现，带来两个好处：</p>
+
+<ol>
+<li>没有了冗杂的函数名，适用于大型项目开发。</li>
+<li>由于不再根据Native函数查找对应的jni层函数，所以首次调用速度比静态注册快。</li>
+</ol>
+
+<p>开发者需要自行提供Java层和C/C++层中的映射关系。</p>
+
+<p>一种可行的方法是基于JNI重载JNI_OnLoad()，在其中对函数进行动态注册。</p>
+
+<p>举个🌰：</p>
+
+<p>DynamicTest.java</p>
+
+<pre><code>package jnicourse.hhx.com.jnidemo;
+
+/**
+ * Created by CodeYel on 16/9/17.
+ */
+public class DynamicTest {
+    public native int doTwo(int param1, int param2);
+}
+</code></pre>
+
+<p>DynamicBind.cpp</p>
+
+<ol>
+<li><p>以下三个部分完成了对方法的动态注册任务。此步骤涉及到如何获取Java函数的函数问题。具体请查看文末的参考文献，点击此<a href="http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/">Link</a>。</p>
+
+<p>static const char *className = &ldquo;jnicourse/hhx/com/jnidemo/DynamicTest&rdquo;;</p>
+
+<p>static JNINativeMethod gJni_Methods_DynamicTest[] = {
+    {&ldquo;doTwo&rdquo;, &ldquo;(II)I&rdquo;, (void*)addTwoNumber},
+};</p>
+
+<p>static int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods)
+{
+    jclass clazz;</p>
+
+<pre><code> clazz = (env)-&gt;FindClass( className);
+ if (clazz == NULL) {
+
+
+    return -1;
+}
+int result = 0;
+if ((env)-&gt;RegisterNatives(clazz, gMethods, numMethods) &lt; 0) {
+
+
+    result = -1;
+}
+(env)-&gt;DeleteLocalRef(clazz);
+return result;
+</code></pre>
+
+<p>}</p></li>
+
+<li><p>重载JNI_OnLoad函数，并在其中调用jniRegisterNativeMethods函数</p>
+
+<pre><code>jint JNI_OnLoad(JavaVM* vm, void* reserved){
+
+
+JNIEnv* env = NULL;
+jint result = -1;
+
+
+if (vm-&gt;GetEnv((void**) &amp;env, JNI_VERSION_1_4) != JNI_OK) {
+    return result;
+}
+
+
+jniRegisterNativeMethods(env, className, gJni_Methods_DynamicTest, sizeof(gJni_Methods_DynamicTest) / sizeof(JNINativeMethod));
+
+
+return JNI_VERSION_1_4;
+}
+</code></pre></li>
+</ol>
+
+<p>PS：在函数返回值方面，可以做一些定制，来根据返回值判断调用jniRegisterNativeMethods是否成功。</p>
+
+<h3 id="jni开发工具:2848143d4f7cd8cc66ecf3924bd7d3e0">JNI开发工具</h3>
+
+<p>结构如下：
+<img src="demoOfJniRegiste_4.png" alt="" /></p>
+
+<h4 id="动态注册框架:2848143d4f7cd8cc66ecf3924bd7d3e0">动态注册框架</h4>
+
+<p>主要由：JniHelper.h和JniHelper.cpp构成。</p>
+
+<p>是上文介绍的动态注册方法做了一个简单的封装，具体请看DEMO中的DynamicBind2.h和DynamicBind2.cpp文件实现。</p>
+
+<p>使用方法：</p>
+
+<ol>
+<li><p>在需要动态注册的文件中，引入</p>
+
+<pre><code>#include &quot;util/JniHelper.h&quot;
+</code></pre></li>
+
+<li><p>定义一个函数进行注册：</p>
+
+<pre><code>jint register_DT2(JNIEnv * env) {
+    return jniRegisterNativeMethods(env, className2, gJni_Methods_DynamicTest2, NELEM(gJni_Methods_DynamicTest2));
+}
+</code></pre></li>
+
+<li><p>在上文的JNI_OnLoad函数进行调用register_DT2函数。</p></li>
+</ol>
+
+<h4 id="log框架:2848143d4f7cd8cc66ecf3924bd7d3e0">Log框架</h4>
+
+<p>主要由：JniDebug.h和JniDebug.cpp构成。
+做了一个简单的实现，具体请看文末贴出的文本DEMO的链接。</p>
+
+<p>注意在Android.mk文件中添加以下语句：</p>
+
+<pre><code>LOCAL_LDLIBS += -L$(SYSROOT)/usr/lib -llog
+</code></pre>
+
+<h4 id="注意事项:2848143d4f7cd8cc66ecf3924bd7d3e0">注意事项</h4>
+
+<ol>
+<li><p>在Android.mk中的添加.cpp文件。</p>
+
+<p>例如以下代码将dynamic，static，util目录下的cpp文件引入。</p>
+
+<pre><code>FILE_LIST := $(wildcard $(LOCAL_PATH)/dynamic/*.cpp) \
+$(wildcard $(LOCAL_PATH)/static/*.cpp) \
+$(wildcard $(LOCAL_PATH)/util/*.cpp)
+LOCAL_SRC_FILES :=$(FILE_LIST:$(LOCAL_PATH)/%=%)
+</code></pre></li>
+</ol>
+
+<h3 id="参考文献:2848143d4f7cd8cc66ecf3924bd7d3e0">参考文献</h3>
+
+<ol>
+<li>很棒的文章，推荐。另外已经和此文作者进行Email沟通。<a href="http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/">http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/</a></li>
+<li>介绍了一种使用实验性的Gradle进行开发的方法。<a href="https://github.com/freekite/Android-JNITest">https://github.com/freekite/Android-JNITest</a></li>
+<li>一篇比较详细的JNI文章。<a href="https://my.oschina.net/wolfcs/blog/111309">https://my.oschina.net/wolfcs/blog/111309</a></li>
+</ol>
+
+  </div>
+  
   <div class="post">
     <h1 class="post-title">
       <a href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0Screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/">
@@ -997,7 +1214,7 @@ Note: Low-density (ldpi) resources aren’t always necessary. When you provide h
 
 <p>2016.4.6 完成的博客文章迁移~</p>
 
-<p>我的邮箱: <a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p>
+<p>我的邮箱: <a href="mailto:huanghanxiongchn@gmail.com">huanghanxiongchn@gmail.com</a></p>
 
 <p>我的Git: <a href="https://github.com/freedomofme">https://github.com/freedomofme</a></p>
 

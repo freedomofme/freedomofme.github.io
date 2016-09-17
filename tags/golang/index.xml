@@ -62,21 +62,5 @@
 </description>
     </item>
     
-    <item>
-      <title>关于我</title>
-      <link>http://freedomofme.github.io/aboutme/</link>
-      <pubDate>Fri, 01 Apr 2016 15:21:43 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/aboutme/</guid>
-      <description>&lt;p&gt;你好，我叫Coder Yel，中山大学数据科学学院的研究生一枚，很高兴你的到来，本站关注于一些小众的Java和Android知识的介绍和汇总。&lt;/p&gt;
-
-&lt;p&gt;2016.4.6 完成的博客文章迁移~&lt;/p&gt;
-
-&lt;p&gt;我的邮箱: &lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;我的Git: &lt;a href=&#34;https://github.com/freedomofme&#34;&gt;https://github.com/freedomofme&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
   </channel>
 </rss>

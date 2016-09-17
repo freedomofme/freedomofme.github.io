@@ -6,8 +6,220 @@
     <description>Recent content in Development on Coder Yel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 13 Aug 2016 01:59:36 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 17 Sep 2016 18:31:12 +0800</lastBuildDate>
     <atom:link href="http://freedomofme.github.io/tags/development/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>JNI静态与动态注册介绍以及Demo实现</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/demoOfJniRegister/</link>
+      <pubDate>Sat, 17 Sep 2016 18:31:12 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/demoOfJniRegister/</guid>
+      <description>
+
+&lt;p&gt;一直以来，都觉得Java和Native C的通信没有比较全面直观的教程，知道前几天看见一个大牛的总结。所以接着这个机会，对JNI调用做一些简单记录：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;* JNI的两种注册机制
+* 较大型项目JNI的开发框架
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;jni:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;JNI&lt;/h3&gt;
+
+&lt;p&gt;JNI是Java和C进行混合编程的桥梁，其中的核心点就是在Java层声明的Native方法，如何在C层中找到对应的实现。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;静态注册&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;动态注册，需要提供Java中Native方法的方法签名和Native层中对应的实现函数。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&#34;静态注册:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;静态注册&lt;/h4&gt;
+
+&lt;p&gt;要求C/C++层的函数名符合某种特定的要求:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;包含Java中Native方法的目录信息和方法名&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;举个栗子：
+假如以下是StaticTest.java 类代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package jnicourse.hhx.com.jnidemo;
+
+/**
+* Created by CodeYel on 16/9/17.
+*/
+public class StaticTest {
+    public native int doAdd(int param1,int param2);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这对应的C++中jnicourse_hhx_com_jnidemo_StaticTest.h的函数名是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/*
+* Class:     jnicourse_hhx_com_jnidemo_StaticTest
+* Method:    doAdd
+* Signature: (II)I
+*/
+JNIEXPORT jint JNICALL Java_jnicourse_hhx_com_jnidemo_StaticTest_doAdd (JNIEnv *, jobject, jint, jint);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;按照以上规则进行命名就，在调用到Native的方法时,JVM会去查找是否存在对应函数名的函数，以此实现静态注册。&lt;/p&gt;
+
+&lt;p&gt;附带礼品：NDK提供了javap命令来方便根据.java文件来生成.h。
+假如你使用AS作为你的IDE，你可以自定义扩展工具，如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;demoOfJniRegister_1.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;demoOfJniRegister_2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;使用方法：在包含Native声明的方法的文件上右键，选择External Tool中的Javap工具。&lt;/p&gt;
+
+&lt;h4 id=&#34;动态注册:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;动态注册&lt;/h4&gt;
+
+&lt;p&gt;动态注册相对于静态注册，优点是不再根据特定路径查找函数的实现，带来两个好处：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;没有了冗杂的函数名，适用于大型项目开发。&lt;/li&gt;
+&lt;li&gt;由于不再根据Native函数查找对应的jni层函数，所以首次调用速度比静态注册快。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;开发者需要自行提供Java层和C/C++层中的映射关系。&lt;/p&gt;
+
+&lt;p&gt;一种可行的方法是基于JNI重载JNI_OnLoad()，在其中对函数进行动态注册。&lt;/p&gt;
+
+&lt;p&gt;举个🌰：&lt;/p&gt;
+
+&lt;p&gt;DynamicTest.java&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package jnicourse.hhx.com.jnidemo;
+
+/**
+ * Created by CodeYel on 16/9/17.
+ */
+public class DynamicTest {
+    public native int doTwo(int param1, int param2);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;DynamicBind.cpp&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;以下三个部分完成了对方法的动态注册任务。此步骤涉及到如何获取Java函数的函数问题。具体请查看文末的参考文献，点击此&lt;a href=&#34;http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/&#34;&gt;Link&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;static const char *className = &amp;ldquo;jnicourse/hhx/com/jnidemo/DynamicTest&amp;rdquo;;&lt;/p&gt;
+
+&lt;p&gt;static JNINativeMethod gJni_Methods_DynamicTest[] = {
+    {&amp;ldquo;doTwo&amp;rdquo;, &amp;ldquo;(II)I&amp;rdquo;, (void*)addTwoNumber},
+};&lt;/p&gt;
+
+&lt;p&gt;static int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods)
+{
+    jclass clazz;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; clazz = (env)-&amp;gt;FindClass( className);
+ if (clazz == NULL) {
+
+
+    return -1;
+}
+int result = 0;
+if ((env)-&amp;gt;RegisterNatives(clazz, gMethods, numMethods) &amp;lt; 0) {
+
+
+    result = -1;
+}
+(env)-&amp;gt;DeleteLocalRef(clazz);
+return result;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;重载JNI_OnLoad函数，并在其中调用jniRegisterNativeMethods函数&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jint JNI_OnLoad(JavaVM* vm, void* reserved){
+
+
+JNIEnv* env = NULL;
+jint result = -1;
+
+
+if (vm-&amp;gt;GetEnv((void**) &amp;amp;env, JNI_VERSION_1_4) != JNI_OK) {
+    return result;
+}
+
+
+jniRegisterNativeMethods(env, className, gJni_Methods_DynamicTest, sizeof(gJni_Methods_DynamicTest) / sizeof(JNINativeMethod));
+
+
+return JNI_VERSION_1_4;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;PS：在函数返回值方面，可以做一些定制，来根据返回值判断调用jniRegisterNativeMethods是否成功。&lt;/p&gt;
+
+&lt;h3 id=&#34;jni开发工具:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;JNI开发工具&lt;/h3&gt;
+
+&lt;p&gt;结构如下：
+&lt;img src=&#34;demoOfJniRegiste_4.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;动态注册框架:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;动态注册框架&lt;/h4&gt;
+
+&lt;p&gt;主要由：JniHelper.h和JniHelper.cpp构成。&lt;/p&gt;
+
+&lt;p&gt;是上文介绍的动态注册方法做了一个简单的封装，具体请看DEMO中的DynamicBind2.h和DynamicBind2.cpp文件实现。&lt;/p&gt;
+
+&lt;p&gt;使用方法：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;在需要动态注册的文件中，引入&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;util/JniHelper.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;定义一个函数进行注册：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jint register_DT2(JNIEnv * env) {
+    return jniRegisterNativeMethods(env, className2, gJni_Methods_DynamicTest2, NELEM(gJni_Methods_DynamicTest2));
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在上文的JNI_OnLoad函数进行调用register_DT2函数。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&#34;log框架:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;Log框架&lt;/h4&gt;
+
+&lt;p&gt;主要由：JniDebug.h和JniDebug.cpp构成。
+做了一个简单的实现，具体请看文末贴出的文本DEMO的链接。&lt;/p&gt;
+
+&lt;p&gt;注意在Android.mk文件中添加以下语句：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LOCAL_LDLIBS += -L$(SYSROOT)/usr/lib -llog
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;注意事项:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;注意事项&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;在Android.mk中的添加.cpp文件。&lt;/p&gt;
+
+&lt;p&gt;例如以下代码将dynamic，static，util目录下的cpp文件引入。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FILE_LIST := $(wildcard $(LOCAL_PATH)/dynamic/*.cpp) \
+$(wildcard $(LOCAL_PATH)/static/*.cpp) \
+$(wildcard $(LOCAL_PATH)/util/*.cpp)
+LOCAL_SRC_FILES :=$(FILE_LIST:$(LOCAL_PATH)/%=%)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;参考文献:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;参考文献&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;很棒的文章，推荐。另外已经和此文作者进行Email沟通。&lt;a href=&#34;http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/&#34;&gt;http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;介绍了一种使用实验性的Gradle进行开发的方法。&lt;a href=&#34;https://github.com/freekite/Android-JNITest&#34;&gt;https://github.com/freekite/Android-JNITest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;一篇比较详细的JNI文章。&lt;a href=&#34;https://my.oschina.net/wolfcs/blog/111309&#34;&gt;https://my.oschina.net/wolfcs/blog/111309&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
     
     <item>
       <title>记Screen命令简单流程</title>
@@ -215,7 +427,7 @@ URLs类中采用反射的方式来读取静态URL的数据。&lt;/p&gt;
 
 &lt;p&gt;2016.4.6 完成的博客文章迁移~&lt;/p&gt;
 
-&lt;p&gt;我的邮箱: &lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我的邮箱: &lt;a href=&#34;mailto:huanghanxiongchn@gmail.com&#34;&gt;huanghanxiongchn@gmail.com&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;我的Git: &lt;a href=&#34;https://github.com/freedomofme&#34;&gt;https://github.com/freedomofme&lt;/a&gt;&lt;/p&gt;
 </description>
