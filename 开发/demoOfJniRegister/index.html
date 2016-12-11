@@ -105,7 +105,7 @@ var _hmt = _hmt || [];
 <li>较大型项目JNI的开发框架</li>
 </ul>
 
-<h3 id="jni:2848143d4f7cd8cc66ecf3924bd7d3e0">JNI</h3>
+<h3 id="一-jni介绍:2848143d4f7cd8cc66ecf3924bd7d3e0">一、JNI介绍</h3>
 
 <p>JNI是Java和C进行混合编程的桥梁，其中的核心点就是在Java层声明的Native方法，如何在C层中找到对应的实现。</p>
 
@@ -147,7 +147,7 @@ JNIEXPORT jint JNICALL Java_jnicourse_hhx_com_jnidemo_StaticTest_doAdd (JNIEnv *
 
 <p>按照以上规则进行命名就，在调用到Native的方法时,JVM会去查找是否存在对应函数名的函数，以此实现静态注册。</p>
 
-<p>附带礼品：NDK提供了javap命令来方便根据.java文件来生成.h。
+<p>附带礼品：NDK提供了javah命令来方便根据.java文件来生成.h。
 假如你使用AS作为你的IDE，你可以自定义扩展工具，如下图所示：</p>
 
 <p><img src="demoOfJniRegister_1.png" alt="" /></p>
@@ -169,7 +169,7 @@ JNIEXPORT jint JNICALL Java_jnicourse_hhx_com_jnidemo_StaticTest_doAdd (JNIEnv *
 
 <p>一种可行的方法是基于JNI重载JNI_OnLoad()，在其中对函数进行动态注册。</p>
 
-<p>举个🌰：</p>
+<p>举个栗子：</p>
 
 <p>DynamicTest.java</p>
 
@@ -186,19 +186,22 @@ public class DynamicTest {
 <p>DynamicBind.cpp</p>
 
 <ol>
-<li><p>以下三个部分完成了对方法的动态注册任务。此步骤涉及到如何获取Java函数的函数问题。具体请查看文末的参考文献，点击此<a href="http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/">Link</a>。</p>
+<li><p>以下三个部分完成了对方法的动态注册任务。此步骤涉及到如何获取Java函数的问题。具体请查看文末的参考文献，点击此<a href="http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/">Link</a>。</p>
 
-<p>static const char *className = &ldquo;jnicourse/hhx/com/jnidemo/DynamicTest&rdquo;;</p>
+<pre><code>static const char *className = &quot;jnicourse/hhx/com/jnidemo/DynamicTest&quot;;
 
-<p>static JNINativeMethod gJni_Methods_DynamicTest[] = {
-    {&ldquo;doTwo&rdquo;, &ldquo;(II)I&rdquo;, (void*)addTwoNumber},
-};</p>
 
-<p>static int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods)
+static JNINativeMethod gJni_Methods_DynamicTest[] = {
+{&quot;doTwo&quot;, &quot;(II)I&quot;, (void*)addTwoNumber},
+};
+
+
+static int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods)
 {
-    jclass clazz;</p>
+jclass clazz;
 
-<pre><code> clazz = (env)-&gt;FindClass( className);
+
+ clazz = (env)-&gt;FindClass( className);
  if (clazz == NULL) {
 
 
@@ -240,7 +243,7 @@ return JNI_VERSION_1_4;
 
 <p>PS：在函数返回值方面，可以做一些定制，来根据返回值判断调用jniRegisterNativeMethods是否成功。</p>
 
-<h3 id="jni开发工具:2848143d4f7cd8cc66ecf3924bd7d3e0">JNI开发工具</h3>
+<h3 id="二-简单jni开发框架介绍:2848143d4f7cd8cc66ecf3924bd7d3e0">二、简单JNI开发框架介绍</h3>
 
 <p>结构如下：
 <img src="demoOfJniRegiste_4.png" alt="" /></p>

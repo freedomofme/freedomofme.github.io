@@ -49,8 +49,8 @@
 &lt;li&gt;screen -list 列出screen的基本情况&lt;/li&gt;
 &lt;li&gt;screen -t name 新建一个名为name的screen&lt;/li&gt;
 &lt;li&gt;Ctrl-a，然后c 在当前screen中新建windows&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”:“ 列出当前screen的windows，可以在此切换windows&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”k“ 删除当前screen的某一个windows&lt;/li&gt;
+&lt;li&gt;Ctrl-a，然后” &amp;ldquo;(双引号) “ 列出当前screen的windows，可以在此切换windows&lt;/li&gt;
+&lt;li&gt;Ctrl-a，然后”k“ 删除当前screen的某一个windows。如果一个screen的所有windows都被删除了，那么该screen也会被删除。&lt;/li&gt;
 &lt;li&gt;Ctrl-a，然后”A“ 对windows重命名&lt;/li&gt;
 &lt;li&gt;Ctrl-a，然后”d“ 退出当前screen 保持后台运行&lt;/li&gt;
 &lt;li&gt;screen -r 重新连接一个screen&lt;/li&gt;

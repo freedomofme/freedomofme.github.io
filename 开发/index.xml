@@ -24,7 +24,7 @@
 &lt;li&gt;较大型项目JNI的开发框架&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;jni:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;JNI&lt;/h3&gt;
+&lt;h3 id=&#34;一-jni介绍:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;一、JNI介绍&lt;/h3&gt;
 
 &lt;p&gt;JNI是Java和C进行混合编程的桥梁，其中的核心点就是在Java层声明的Native方法，如何在C层中找到对应的实现。&lt;/p&gt;
 
@@ -66,7 +66,7 @@ JNIEXPORT jint JNICALL Java_jnicourse_hhx_com_jnidemo_StaticTest_doAdd (JNIEnv *
 
 &lt;p&gt;按照以上规则进行命名就，在调用到Native的方法时,JVM会去查找是否存在对应函数名的函数，以此实现静态注册。&lt;/p&gt;
 
-&lt;p&gt;附带礼品：NDK提供了javap命令来方便根据.java文件来生成.h。
+&lt;p&gt;附带礼品：NDK提供了javah命令来方便根据.java文件来生成.h。
 假如你使用AS作为你的IDE，你可以自定义扩展工具，如下图所示：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;demoOfJniRegister_1.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
@@ -88,7 +88,7 @@ JNIEXPORT jint JNICALL Java_jnicourse_hhx_com_jnidemo_StaticTest_doAdd (JNIEnv *
 
 &lt;p&gt;一种可行的方法是基于JNI重载JNI_OnLoad()，在其中对函数进行动态注册。&lt;/p&gt;
 
-&lt;p&gt;举个🌰：&lt;/p&gt;
+&lt;p&gt;举个栗子：&lt;/p&gt;
 
 &lt;p&gt;DynamicTest.java&lt;/p&gt;
 
@@ -105,19 +105,22 @@ public class DynamicTest {
 &lt;p&gt;DynamicBind.cpp&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;以下三个部分完成了对方法的动态注册任务。此步骤涉及到如何获取Java函数的函数问题。具体请查看文末的参考文献，点击此&lt;a href=&#34;http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/&#34;&gt;Link&lt;/a&gt;。&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;以下三个部分完成了对方法的动态注册任务。此步骤涉及到如何获取Java函数的问题。具体请查看文末的参考文献，点击此&lt;a href=&#34;http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/&#34;&gt;Link&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;static const char *className = &amp;ldquo;jnicourse/hhx/com/jnidemo/DynamicTest&amp;rdquo;;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;static const char *className = &amp;quot;jnicourse/hhx/com/jnidemo/DynamicTest&amp;quot;;
 
-&lt;p&gt;static JNINativeMethod gJni_Methods_DynamicTest[] = {
-    {&amp;ldquo;doTwo&amp;rdquo;, &amp;ldquo;(II)I&amp;rdquo;, (void*)addTwoNumber},
-};&lt;/p&gt;
 
-&lt;p&gt;static int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods)
+static JNINativeMethod gJni_Methods_DynamicTest[] = {
+{&amp;quot;doTwo&amp;quot;, &amp;quot;(II)I&amp;quot;, (void*)addTwoNumber},
+};
+
+
+static int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods)
 {
-    jclass clazz;&lt;/p&gt;
+jclass clazz;
 
-&lt;pre&gt;&lt;code&gt; clazz = (env)-&amp;gt;FindClass( className);
+
+ clazz = (env)-&amp;gt;FindClass( className);
  if (clazz == NULL) {
 
 
@@ -159,7 +162,7 @@ return JNI_VERSION_1_4;
 
 &lt;p&gt;PS：在函数返回值方面，可以做一些定制，来根据返回值判断调用jniRegisterNativeMethods是否成功。&lt;/p&gt;
 
-&lt;h3 id=&#34;jni开发工具:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;JNI开发工具&lt;/h3&gt;
+&lt;h3 id=&#34;二-简单jni开发框架介绍:2848143d4f7cd8cc66ecf3924bd7d3e0&#34;&gt;二、简单JNI开发框架介绍&lt;/h3&gt;
 
 &lt;p&gt;结构如下：
 &lt;img src=&#34;demoOfJniRegiste_4.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
