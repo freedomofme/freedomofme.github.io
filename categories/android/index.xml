@@ -153,9 +153,139 @@ URLs类中采用反射的方式来读取静态URL的数据。&lt;/p&gt;
     </item>
     
     <item>
+      <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+      <description>
+
+&lt;p&gt;本文将主要介绍程序的主要计算流程。具体Android APP代码在&lt;a href=&#34;https://github.com/freedomofme/BinaryTreeTraverseCalculate&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;写作目的：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;当然是为了为了加深理解二叉树遍历啦&lt;/li&gt;
+&lt;li&gt;因为受不了笔试题老出这种题目，所以做出来方便大家以后答题O(∩_∩)O~&lt;/li&gt;
+&lt;li&gt;最关键的是，每次遇到这种题目，我只会凑./捂脸&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。&lt;/p&gt;
+
+&lt;h4 id=&#34;由前序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由前序中序推导&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;已知一棵二叉树的前序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;根据前序序列的第一个元素建立根结点；&lt;/li&gt;
+&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
+&lt;li&gt;在前序序列中确定左右子树的前序序列；&lt;/li&gt;
+&lt;li&gt;由左子树的前序序列和中序序列建立左子树；&lt;/li&gt;
+&lt;li&gt;由右子树的前序序列和中序序列建立右子树。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&#34;由后序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由后序中序推导&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;已知一棵二叉树的后序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;根据后序序列的最后一个元素建立根结点；&lt;/li&gt;
+&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
+&lt;li&gt;在后序序列中确定左右子树的后序序列；&lt;/li&gt;
+&lt;li&gt;由左子树的后序序列和中序序列建立左子树；&lt;/li&gt;
+&lt;li&gt;由右子树的后序序列和中序序列建立右子树。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;引用自：&lt;a href=&#34;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&#34;&gt;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;核心代码:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;核心代码&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;public static void calPostOrder(String preString, String midString) {
+    if (preString.length() == 0) return;
+    if (preString.length() == 1) {
+        result.add(preString.charAt(0));
+    }
+    if (preString.length() &amp;gt; 1) {
+        //前序首字母拆分中序字符串           
+        String[] resultStrings = midString.split(preString.charAt(0) + &amp;quot;&amp;quot;);
+        for (int i = 0; i &amp;lt; resultStrings.length; i++) {
+            String newPreString = findSubStringInPreORPostString(preString, resultStrings[i]);
+            calPostOrder(newPreString, resultStrings[i]);
+        }
+        result.add(preString.charAt(0));
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中findSubStringInPreORPostString()函数就是从先序字符串中取出对应中序的字符串的子串。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Android 图像压缩，和LRU算法使用的推荐链接</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</link>
+      <pubDate>Sat, 02 Jan 2016 17:54:06 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</guid>
+      <description>&lt;p&gt;近两日，看的关于这些方面的一些教程数十篇，最好的当属google原版的教程了。国内有不少文章是翻译这个链接的。&lt;/p&gt;
+
+&lt;p&gt;需要注意的一点是：Android的SDK中的LRU算法在V4包和Util包中各有一个，推荐使用V4包中的。&lt;/p&gt;
+
+&lt;p&gt;在此，推荐两个链接：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&#34;&gt;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&#34;&gt;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;其中，第二个链接是对第一个链接所讲内容的例子演示，下载地址我已经clone到我的github上了，看了会对内容理解的更加深刻，强烈欢迎下载。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/freedomofme/android-imagedownloader&#34;&gt;https://github.com/freedomofme/android-imagedownloader&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Android图片适配，drawable文件夹，低分辨率图片是否必要</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</link>
+      <pubDate>Sat, 02 Jan 2016 17:50:06 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</guid>
+      <description>&lt;p&gt;我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：&lt;/p&gt;
+
+&lt;p&gt;xxhdpi:3.0
+xhdpi: 2.0
+hdpi: 1.5
+mdpi: 1.0
+ldpi: 0.75
+于是一个问题产生了：&lt;/p&gt;
+
+&lt;p&gt;从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？&lt;/p&gt;
+
+&lt;p&gt;查了一些资料，终于在Google的开发者网站上找到了解答：
+&amp;gt;
+Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://developer.android.com/training/basics/supporting-devices/screens.html&#34;&gt;Link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。&lt;/p&gt;
+
+&lt;p&gt;问题到此就解答完了。&lt;/p&gt;
+
+&lt;p&gt;有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Android获取联系人示例，从数据库加载，带首字母标签</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E8%8E%B7%E5%8F%96%E8%81%94%E7%B3%BB%E4%BA%BA%E7%A4%BA%E4%BE%8B%EF%BC%8C%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E8%BD%BD%EF%BC%8C%E5%B8%A6%E9%A6%96%E5%AD%97%E6%AF%8D%E6%A0%87%E7%AD%BE/</link>
-      <pubDate>Wed, 06 Apr 2016 17:59:26 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:59:26 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E8%8E%B7%E5%8F%96%E8%81%94%E7%B3%BB%E4%BA%BA%E7%A4%BA%E4%BE%8B%EF%BC%8C%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E8%BD%BD%EF%BC%8C%E5%B8%A6%E9%A6%96%E5%AD%97%E6%AF%8D%E6%A0%87%E7%AD%BE/</guid>
       <description>
@@ -196,15 +326,15 @@ Querying entities：&lt;a href=&#34;http://developer.android.com/intl/zh-cn/guid
     <item>
       <title>关于Android的ListView中CheckBox错乱</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8EAndroid%E7%9A%84ListView%E4%B8%ADCheckBox%E9%94%99%E4%B9%B1/</link>
-      <pubDate>Wed, 06 Apr 2016 17:57:45 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:57:45 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8EAndroid%E7%9A%84ListView%E4%B8%ADCheckBox%E9%94%99%E4%B9%B1/</guid>
       <description>
 
 &lt;p&gt;本文参考：
-&amp;gt; &lt;a href=&#34;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&#34;&gt;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&lt;/a&gt;&lt;/p&gt;
+&amp;gt; &lt;a href=&#34;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&#34;&gt;ListView中getView的原理＋如何在ListView中放置多个item&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;上文中关于说的Android中的Recycler比较模糊，Android会维持屏幕中显示的item+1个对象。但是复用的时候选择哪个对象来复用的机制并不明确，具体用的是什么数据结构，求告知。。。肯定不是简单的FIFO或LIFO。&lt;/p&gt;
+&lt;p&gt;上文中关于说的Android中的Recycler比较模糊，Android会维持屏幕中显示的item+1个对象。但是具体的复用机制没有介绍，建议阅读源码学习。&lt;/p&gt;
 
 &lt;h3 id=&#34;关于checkbox-选中了之后-下滑之后返回就消失的问题:26155ffc16647da895c63731007e82b8&#34;&gt;关于checkBox，选中了之后，下滑之后返回就消失的问题。&lt;/h3&gt;
 
@@ -365,31 +495,9 @@ class Holder {
     </item>
     
     <item>
-      <title>Android 图像压缩，和LRU算法使用的推荐链接</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</link>
-      <pubDate>Wed, 06 Apr 2016 17:54:06 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</guid>
-      <description>&lt;p&gt;近两日，看的关于这些方面的一些教程数十篇，最好的当属google原版的教程了。国内有不少文章是翻译这个链接的。&lt;/p&gt;
-
-&lt;p&gt;需要注意的一点是：Android的SDK中的LRU算法在V4包和Util包中各有一个，推荐使用V4包中的。&lt;/p&gt;
-
-&lt;p&gt;在此，推荐两个链接：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&#34;&gt;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&#34;&gt;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;其中，第二个链接是对第一个链接所讲内容的例子演示，下载地址我已经clone到我的github上了，看了会对内容理解的更加深刻，强烈欢迎下载。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/freedomofme/android-imagedownloader&#34;&gt;https://github.com/freedomofme/android-imagedownloader&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Anroid自定义RatingBar，显示半个（小数个）的stepSize时，变为整数个的问题</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Anroid%E8%87%AA%E5%AE%9A%E4%B9%89RatingBar%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%8D%8A%E4%B8%AA%EF%BC%88%E5%B0%8F%E6%95%B0%E4%B8%AA%EF%BC%89%E7%9A%84stepSize%E6%97%B6%EF%BC%8C%E5%8F%98%E4%B8%BA%E6%95%B4%E6%95%B0%E4%B8%AA%E7%9A%84%E9%97%AE%E9%A2%98/</link>
-      <pubDate>Wed, 06 Apr 2016 17:52:06 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:52:06 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Anroid%E8%87%AA%E5%AE%9A%E4%B9%89RatingBar%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%8D%8A%E4%B8%AA%EF%BC%88%E5%B0%8F%E6%95%B0%E4%B8%AA%EF%BC%89%E7%9A%84stepSize%E6%97%B6%EF%BC%8C%E5%8F%98%E4%B8%BA%E6%95%B4%E6%95%B0%E4%B8%AA%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
       <description>&lt;p&gt;&lt;RatingBar
@@ -475,114 +583,6 @@ class Holder {
     android:drawable=&amp;quot;@drawable/ic_orang&amp;quot;&amp;gt;
 &amp;lt;/item&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Android图片适配，drawable文件夹，低分辨率图片是否必要</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</link>
-      <pubDate>Wed, 06 Apr 2016 17:50:06 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</guid>
-      <description>&lt;p&gt;我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：&lt;/p&gt;
-
-&lt;p&gt;xxhdpi:3.0
-xhdpi: 2.0
-hdpi: 1.5
-mdpi: 1.0
-ldpi: 0.75
-于是一个问题产生了：&lt;/p&gt;
-
-&lt;p&gt;从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？&lt;/p&gt;
-
-&lt;p&gt;查了一些资料，终于在Google的开发者网站上找到了解答：
-&amp;gt;
-Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://developer.android.com/training/basics/supporting-devices/screens.html&#34;&gt;Link&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。&lt;/p&gt;
-
-&lt;p&gt;问题到此就解答完了。&lt;/p&gt;
-
-&lt;p&gt;有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
-      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
-      <description>
-
-&lt;p&gt;本文将主要介绍程序的主要计算流程。&lt;/p&gt;
-
-&lt;p&gt;写作目的：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;当然是为了为了加深理解二叉树遍历啦&lt;/li&gt;
-&lt;li&gt;因为受不了笔试题老出这种题目，所以做出来方便大家以后答题O(∩_∩)O~&lt;/li&gt;
-&lt;li&gt;最关键的是，每次遇到这种题目，我只会凑./捂脸&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。&lt;/p&gt;
-
-&lt;h4 id=&#34;由前序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由前序中序推导&lt;/h4&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;已知一棵二叉树的前序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;根据前序序列的第一个元素建立根结点；&lt;/li&gt;
-&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
-&lt;li&gt;在前序序列中确定左右子树的前序序列；&lt;/li&gt;
-&lt;li&gt;由左子树的前序序列和中序序列建立左子树；&lt;/li&gt;
-&lt;li&gt;由右子树的前序序列和中序序列建立右子树。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&#34;由后序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由后序中序推导&lt;/h4&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;已知一棵二叉树的后序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;根据后序序列的最后一个元素建立根结点；&lt;/li&gt;
-&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
-&lt;li&gt;在后序序列中确定左右子树的后序序列；&lt;/li&gt;
-&lt;li&gt;由左子树的后序序列和中序序列建立左子树；&lt;/li&gt;
-&lt;li&gt;由右子树的后序序列和中序序列建立右子树。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;引用自：&lt;a href=&#34;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&#34;&gt;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;核心代码:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;核心代码&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;public static void calPostOrder(String preString, String midString) {
-    if (preString.length() == 0) return;
-    if (preString.length() == 1) {
-        result.add(preString.charAt(0));
-    }
-    if (preString.length() &amp;gt; 1) {
-        //前序首字母拆分中序字符串           
-        String[] resultStrings = midString.split(preString.charAt(0) + &amp;quot;&amp;quot;);
-        for (int i = 0; i &amp;lt; resultStrings.length; i++) {
-            String newPreString = findSubStringInPreORPostString(preString, resultStrings[i]);
-            calPostOrder(newPreString, resultStrings[i]);
-        }
-        result.add(preString.charAt(0));
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中findSubStringInPreORPostString()函数就是从先序字符串中取出对应中序的字符串的子串。&lt;/p&gt;
 </description>
     </item>
     

@@ -1,8 +1,8 @@
 	<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/docco.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
   <link href="http://gmpg.org/xfn/11" rel="profile">
@@ -91,8 +91,6 @@ var _hmt = _hmt || [];
 			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
         <a href="http://freedomofme.github.io//tags/development">Development&nbsp;&nbsp;</a> 
       				
-        <a href="http://freedomofme.github.io//tags/golang">golang&nbsp;&nbsp;</a> 
-      				
 
 			  </span>
 			  <ul >
@@ -162,10 +160,15 @@ var _hmt = _hmt || [];
 
 <ul>
 <li><p>Ttl和softTtl说明
-Ttl和softTtl用来用户自定义缓存时间，通常softTtl &lt;= Ttl。
-当一个请求的过期时间 &gt; Ttl, 则重新请求服务器。
-当一个请求的过期时间 &gt; softTtl &amp;&amp; &lt; Ttl, 则先使用缓存数据做出响应，并同时将该请求发送服务器。（也就是说，响应回调函数会触发两次）
-当一个请求的过期时间 &gt; softTtl，则直接使用本地缓存。</p>
+Ttl和softTtl用来用户自定义缓存时间，通常softTtl &lt;= Ttl。</p>
+
+<ul>
+<li><p>当一个请求的过期时间 &gt; Ttl, 则重新请求服务器。</p></li>
+
+<li><p>当一个请求的过期时间 &gt; softTtl &amp;&amp; &lt; Ttl, 则先使用缓存数据做出响应，并同时将该请求发送服务器。（也就是说，响应回调函数会触发两次）</p></li>
+
+<li><p>当一个请求的过期时间 &gt; softTtl，则直接使用本地缓存。</p></li>
+</ul>
 
 <p>根据以上特性，通过设置恰当的Ttl和softTtl，APP可以实现数据的及时展现和刷新。</p></li>
 

@@ -79,10 +79,15 @@
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Ttl和softTtl说明
-Ttl和softTtl用来用户自定义缓存时间，通常softTtl &amp;lt;= Ttl。
-当一个请求的过期时间 &amp;gt; Ttl, 则重新请求服务器。
-当一个请求的过期时间 &amp;gt; softTtl &amp;amp;&amp;amp; &amp;lt; Ttl, 则先使用缓存数据做出响应，并同时将该请求发送服务器。（也就是说，响应回调函数会触发两次）
-当一个请求的过期时间 &amp;gt; softTtl，则直接使用本地缓存。&lt;/p&gt;
+Ttl和softTtl用来用户自定义缓存时间，通常softTtl &amp;lt;= Ttl。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;当一个请求的过期时间 &amp;gt; Ttl, 则重新请求服务器。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;当一个请求的过期时间 &amp;gt; softTtl &amp;amp;&amp;amp; &amp;lt; Ttl, 则先使用缓存数据做出响应，并同时将该请求发送服务器。（也就是说，响应回调函数会触发两次）&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;当一个请求的过期时间 &amp;gt; softTtl，则直接使用本地缓存。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;根据以上特性，通过设置恰当的Ttl和softTtl，APP可以实现数据的及时展现和刷新。&lt;/p&gt;&lt;/li&gt;
 
@@ -205,7 +210,7 @@ return mDefaultTtl;
 &lt;p&gt;一直以来，都觉得Java和Native C的通信没有比较全面直观的教程，知道前几天看见一个大牛的总结。所以接着这个机会，对JNI调用做一些简单记录：&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;JNI的两种注册机制&lt;/li&gt;
+&lt;li&gt;JNI的两种注册机制：静态注册和动态注册&lt;/li&gt;
 &lt;li&gt;较大型项目JNI的开发框架&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -554,9 +559,220 @@ URLs类中采用反射的方式来读取静态URL的数据。&lt;/p&gt;
     </item>
     
     <item>
+      <title>Java重排序和happens-before学习思路</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</link>
+      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</guid>
+      <description>&lt;p&gt;鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。&lt;/p&gt;
+
+&lt;p&gt;我觉得理解这些概念，比较好的思路是这样的：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;知道什么是重排序？
+&amp;gt; 重排序是编译器和处理器为了优化性能而对指令执行顺序进行重新排序。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;现在你已经知道了什么是重排序，认识下重排序的发生位置：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;编译器重排序&lt;/li&gt;
+&lt;li&gt;指令级并行重排序&lt;/li&gt;
+&lt;li&gt;内存系统重排序&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;理解单线程程序中可能发生指令的重排序&lt;/p&gt;
+
+&lt;p&gt;这就是说在单线程中，编译器也会进行重排序。但是为什么我以前写了这么久单线程的Java程序，都没有发现指令重排序这个问题？&lt;/p&gt;
+
+&lt;p&gt;原因是java遵从as-if-serial语义，即单线程的程序即使发生了重排序，程序的执行结果不能被改变。所以，即使发生了重排序，执行结果是一样的，所以你感觉不到。&lt;/p&gt;
+
+&lt;p&gt;比如说，对于有数据依赖的语句进行重排序，就会改变结果，所以会禁止此种情况的重排序。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;理解happens-before的定义&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;如果一个操作happens-before另一个操作，那么第一个操作的执行结果对第二个操作可见。且第一个操作排在第二个操作之前。&lt;/li&gt;
+&lt;li&gt;两个操作之间存在happens-before关系，如果重排序之后的对执行结果没有影响，也可以重排序。即表明不一定存在这个关系就一定不能重排序。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;happens-before规则&lt;/p&gt;
+
+&lt;p&gt;这里有6条：程序次序规则；监视器锁规则；volatile规则；传递性规则等等。
+比如：程序次序规则，它要求一个线程中的每个操作，happens-before该线程的任何后续操作。
+这里大家去查阅详细资料。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;此时可能会有一个疑惑，既然多线程程序的先后语句满足happens-before规则中程序次序规则，为什么还会重排序？&lt;/p&gt;
+
+&lt;p&gt;其实这个问题前面已经说了，第4点，在多线程程序中，也是由多个单线程组成的。他们中的每一个线程前后是存在happens-before规则。java以单线程的角度来看待这个问题：java认为对线程中语句进行重排序是不会改变结果的。&lt;/p&gt;
+
+&lt;p&gt;因为java又不知道你这个代码是会在多线程里运行还是单线程里运行，它只保证单线程运行时，重排序后不改变执行结果，当这代码在多线程里运行时就可能出现问题。&lt;/p&gt;
+
+&lt;p&gt;所以我们就需要在多线程中进行正确的同步的一个原因。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;学习volatile语义、锁的语义、和final的语义&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;此时就可惜学习java中的Thread的实现和并发容器的实现&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;总结&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;线程一：a -&amp;gt; b -&amp;gt; c
+线程二：A -&amp;gt; B -&amp;gt; C&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;若没有重排序的结果可能是&lt;/p&gt;
+
+&lt;p&gt;a -&amp;gt; A -&amp;gt; B -&amp;gt; b -&amp;gt; c -&amp;gt; C&lt;/p&gt;
+
+&lt;p&gt;也就是单个线程的顺序不变&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;若发生了重排序结果可能是&lt;/p&gt;
+
+&lt;p&gt;b -&amp;gt; B -&amp;gt; A -&amp;gt; a -&amp;gt; c -&amp;gt; C&lt;/p&gt;
+
+&lt;p&gt;就要分析里面的代码是否有happens-before的关系以及对每个单线程而言的重拍序是否会改变运行结果来分析。&lt;/p&gt;
+
+&lt;p&gt;本文参考：《并发编写的艺术》&lt;/p&gt;
+
+&lt;p&gt;欢迎批评指正：&lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+      <description>
+
+&lt;p&gt;本文将主要介绍程序的主要计算流程。具体Android APP代码在&lt;a href=&#34;https://github.com/freedomofme/BinaryTreeTraverseCalculate&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;写作目的：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;当然是为了为了加深理解二叉树遍历啦&lt;/li&gt;
+&lt;li&gt;因为受不了笔试题老出这种题目，所以做出来方便大家以后答题O(∩_∩)O~&lt;/li&gt;
+&lt;li&gt;最关键的是，每次遇到这种题目，我只会凑./捂脸&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。&lt;/p&gt;
+
+&lt;h4 id=&#34;由前序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由前序中序推导&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;已知一棵二叉树的前序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;根据前序序列的第一个元素建立根结点；&lt;/li&gt;
+&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
+&lt;li&gt;在前序序列中确定左右子树的前序序列；&lt;/li&gt;
+&lt;li&gt;由左子树的前序序列和中序序列建立左子树；&lt;/li&gt;
+&lt;li&gt;由右子树的前序序列和中序序列建立右子树。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&#34;由后序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由后序中序推导&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;已知一棵二叉树的后序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;根据后序序列的最后一个元素建立根结点；&lt;/li&gt;
+&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
+&lt;li&gt;在后序序列中确定左右子树的后序序列；&lt;/li&gt;
+&lt;li&gt;由左子树的后序序列和中序序列建立左子树；&lt;/li&gt;
+&lt;li&gt;由右子树的后序序列和中序序列建立右子树。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;引用自：&lt;a href=&#34;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&#34;&gt;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;核心代码:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;核心代码&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;public static void calPostOrder(String preString, String midString) {
+    if (preString.length() == 0) return;
+    if (preString.length() == 1) {
+        result.add(preString.charAt(0));
+    }
+    if (preString.length() &amp;gt; 1) {
+        //前序首字母拆分中序字符串           
+        String[] resultStrings = midString.split(preString.charAt(0) + &amp;quot;&amp;quot;);
+        for (int i = 0; i &amp;lt; resultStrings.length; i++) {
+            String newPreString = findSubStringInPreORPostString(preString, resultStrings[i]);
+            calPostOrder(newPreString, resultStrings[i]);
+        }
+        result.add(preString.charAt(0));
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中findSubStringInPreORPostString()函数就是从先序字符串中取出对应中序的字符串的子串。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Android 图像压缩，和LRU算法使用的推荐链接</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</link>
+      <pubDate>Sat, 02 Jan 2016 17:54:06 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</guid>
+      <description>&lt;p&gt;近两日，看的关于这些方面的一些教程数十篇，最好的当属google原版的教程了。国内有不少文章是翻译这个链接的。&lt;/p&gt;
+
+&lt;p&gt;需要注意的一点是：Android的SDK中的LRU算法在V4包和Util包中各有一个，推荐使用V4包中的。&lt;/p&gt;
+
+&lt;p&gt;在此，推荐两个链接：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&#34;&gt;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&#34;&gt;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;其中，第二个链接是对第一个链接所讲内容的例子演示，下载地址我已经clone到我的github上了，看了会对内容理解的更加深刻，强烈欢迎下载。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/freedomofme/android-imagedownloader&#34;&gt;https://github.com/freedomofme/android-imagedownloader&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Android图片适配，drawable文件夹，低分辨率图片是否必要</title>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</link>
+      <pubDate>Sat, 02 Jan 2016 17:50:06 +0800</pubDate>
+      
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</guid>
+      <description>&lt;p&gt;我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：&lt;/p&gt;
+
+&lt;p&gt;xxhdpi:3.0
+xhdpi: 2.0
+hdpi: 1.5
+mdpi: 1.0
+ldpi: 0.75
+于是一个问题产生了：&lt;/p&gt;
+
+&lt;p&gt;从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？&lt;/p&gt;
+
+&lt;p&gt;查了一些资料，终于在Google的开发者网站上找到了解答：
+&amp;gt;
+Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://developer.android.com/training/basics/supporting-devices/screens.html&#34;&gt;Link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。&lt;/p&gt;
+
+&lt;p&gt;问题到此就解答完了。&lt;/p&gt;
+
+&lt;p&gt;有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Android获取联系人示例，从数据库加载，带首字母标签</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E8%8E%B7%E5%8F%96%E8%81%94%E7%B3%BB%E4%BA%BA%E7%A4%BA%E4%BE%8B%EF%BC%8C%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E8%BD%BD%EF%BC%8C%E5%B8%A6%E9%A6%96%E5%AD%97%E6%AF%8D%E6%A0%87%E7%AD%BE/</link>
-      <pubDate>Wed, 06 Apr 2016 17:59:26 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:59:26 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E8%8E%B7%E5%8F%96%E8%81%94%E7%B3%BB%E4%BA%BA%E7%A4%BA%E4%BE%8B%EF%BC%8C%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8A%A0%E8%BD%BD%EF%BC%8C%E5%B8%A6%E9%A6%96%E5%AD%97%E6%AF%8D%E6%A0%87%E7%AD%BE/</guid>
       <description>
@@ -597,14 +813,14 @@ Querying entities：&lt;a href=&#34;http://developer.android.com/intl/zh-cn/guid
     <item>
       <title>字符集乱码问题:ISO-8859-1和GBK</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98-ISO-8859-1%E5%92%8CGBK/</link>
-      <pubDate>Wed, 06 Apr 2016 17:59:16 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:59:16 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98-ISO-8859-1%E5%92%8CGBK/</guid>
       <description>
 
 &lt;p&gt;首先引用百度知道的问题：
 &amp;gt;
-[&lt;a href=&#34;http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81](&#34;&gt;http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81](&lt;/a&gt;)&lt;/p&gt;
+&lt;a href=&#34;http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81&#34;&gt;帮忙翻译 ÄãºÃ£¬¿Í»§ÉÐÔ&amp;amp;Uacu&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;即：出现了以下字符乱码
 ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡
@@ -631,7 +847,7 @@ System.out.println((char)(256 + hold[i]));
     <item>
       <title>浅谈Java对象回收的三种方式</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E6%B5%85%E8%B0%88Java%E5%AF%B9%E8%B1%A1%E5%9B%9E%E6%94%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
-      <pubDate>Wed, 06 Apr 2016 17:59:06 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:59:06 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E6%B5%85%E8%B0%88Java%E5%AF%B9%E8%B1%A1%E5%9B%9E%E6%94%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
       <description>
@@ -670,15 +886,15 @@ System.out.println((char)(256 + hold[i]));
     <item>
       <title>关于Android的ListView中CheckBox错乱</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8EAndroid%E7%9A%84ListView%E4%B8%ADCheckBox%E9%94%99%E4%B9%B1/</link>
-      <pubDate>Wed, 06 Apr 2016 17:57:45 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:57:45 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8EAndroid%E7%9A%84ListView%E4%B8%ADCheckBox%E9%94%99%E4%B9%B1/</guid>
       <description>
 
 &lt;p&gt;本文参考：
-&amp;gt; &lt;a href=&#34;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&#34;&gt;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&lt;/a&gt;&lt;/p&gt;
+&amp;gt; &lt;a href=&#34;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&#34;&gt;ListView中getView的原理＋如何在ListView中放置多个item&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;上文中关于说的Android中的Recycler比较模糊，Android会维持屏幕中显示的item+1个对象。但是复用的时候选择哪个对象来复用的机制并不明确，具体用的是什么数据结构，求告知。。。肯定不是简单的FIFO或LIFO。&lt;/p&gt;
+&lt;p&gt;上文中关于说的Android中的Recycler比较模糊，Android会维持屏幕中显示的item+1个对象。但是具体的复用机制没有介绍，建议阅读源码学习。&lt;/p&gt;
 
 &lt;h3 id=&#34;关于checkbox-选中了之后-下滑之后返回就消失的问题:26155ffc16647da895c63731007e82b8&#34;&gt;关于checkBox，选中了之后，下滑之后返回就消失的问题。&lt;/h3&gt;
 
@@ -839,31 +1055,9 @@ class Holder {
     </item>
     
     <item>
-      <title>Android 图像压缩，和LRU算法使用的推荐链接</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</link>
-      <pubDate>Wed, 06 Apr 2016 17:54:06 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%20%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9%EF%BC%8C%E5%92%8CLRU%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E9%93%BE%E6%8E%A5/</guid>
-      <description>&lt;p&gt;近两日，看的关于这些方面的一些教程数十篇，最好的当属google原版的教程了。国内有不少文章是翻译这个链接的。&lt;/p&gt;
-
-&lt;p&gt;需要注意的一点是：Android的SDK中的LRU算法在V4包和Util包中各有一个，推荐使用V4包中的。&lt;/p&gt;
-
-&lt;p&gt;在此，推荐两个链接：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&#34;&gt;https://developer.android.com/intl/ru/training/displaying-bitmaps/process-bitmap.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&#34;&gt;http://android-developers.blogspot.jp/2010/07/multithreading-for-performance.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;其中，第二个链接是对第一个链接所讲内容的例子演示，下载地址我已经clone到我的github上了，看了会对内容理解的更加深刻，强烈欢迎下载。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/freedomofme/android-imagedownloader&#34;&gt;https://github.com/freedomofme/android-imagedownloader&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Anroid自定义RatingBar，显示半个（小数个）的stepSize时，变为整数个的问题</title>
       <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Anroid%E8%87%AA%E5%AE%9A%E4%B9%89RatingBar%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%8D%8A%E4%B8%AA%EF%BC%88%E5%B0%8F%E6%95%B0%E4%B8%AA%EF%BC%89%E7%9A%84stepSize%E6%97%B6%EF%BC%8C%E5%8F%98%E4%B8%BA%E6%95%B4%E6%95%B0%E4%B8%AA%E7%9A%84%E9%97%AE%E9%A2%98/</link>
-      <pubDate>Wed, 06 Apr 2016 17:52:06 +0800</pubDate>
+      <pubDate>Fri, 01 Jan 2016 17:52:06 +0800</pubDate>
       
       <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Anroid%E8%87%AA%E5%AE%9A%E4%B9%89RatingBar%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%8D%8A%E4%B8%AA%EF%BC%88%E5%B0%8F%E6%95%B0%E4%B8%AA%EF%BC%89%E7%9A%84stepSize%E6%97%B6%EF%BC%8C%E5%8F%98%E4%B8%BA%E6%95%B4%E6%95%B0%E4%B8%AA%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
       <description>&lt;p&gt;&lt;RatingBar
@@ -949,195 +1143,6 @@ class Holder {
     android:drawable=&amp;quot;@drawable/ic_orang&amp;quot;&amp;gt;
 &amp;lt;/item&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Android图片适配，drawable文件夹，低分辨率图片是否必要</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</link>
-      <pubDate>Wed, 06 Apr 2016 17:50:06 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Android%E5%9B%BE%E7%89%87%E9%80%82%E9%85%8D%EF%BC%8Cdrawable%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E4%BD%8E%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%BF%85%E8%A6%81/</guid>
-      <description>&lt;p&gt;我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：&lt;/p&gt;
-
-&lt;p&gt;xxhdpi:3.0
-xhdpi: 2.0
-hdpi: 1.5
-mdpi: 1.0
-ldpi: 0.75
-于是一个问题产生了：&lt;/p&gt;
-
-&lt;p&gt;从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？&lt;/p&gt;
-
-&lt;p&gt;查了一些资料，终于在Google的开发者网站上找到了解答：
-&amp;gt;
-Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://developer.android.com/training/basics/supporting-devices/screens.html&#34;&gt;Link&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。&lt;/p&gt;
-
-&lt;p&gt;问题到此就解答完了。&lt;/p&gt;
-
-&lt;p&gt;有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Java重排序和happens-before学习思路</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</link>
-      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</guid>
-      <description>&lt;p&gt;鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。&lt;/p&gt;
-
-&lt;p&gt;我觉得理解这些概念，比较好的思路是这样的：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;知道什么是重排序？
-&amp;gt; 重排序是编译器和处理器为了优化性能而对指令执行顺序进行重新排序。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;现在你已经知道了什么是重排序，认识下重排序的发生位置：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;编译器重排序&lt;/li&gt;
-&lt;li&gt;指令级并行重排序&lt;/li&gt;
-&lt;li&gt;内存系统重排序&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;理解单线程程序中可能发生指令的重排序&lt;/p&gt;
-
-&lt;p&gt;这就是说在单线程中，编译器也会进行重排序。但是为什么我以前写了这么久单线程的Java程序，都没有发现指令重排序这个问题？&lt;/p&gt;
-
-&lt;p&gt;原因是java遵从as-if-serial语义，即单线程的程序即使发生了重排序，程序的执行结果不能被改变。所以，即使发生了重排序，执行结果是一样的，所以你感觉不到。&lt;/p&gt;
-
-&lt;p&gt;比如说，对于有数据依赖的语句进行重排序，就会改变结果，所以会禁止此种情况的重排序。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;理解happens-before的定义&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;如果一个操作happens-before另一个操作，那么第一个操作的执行结果对第二个操作可见。且第一个操作排在第二个操作之前。&lt;/li&gt;
-&lt;li&gt;两个操作之间存在happens-before关系，如果重排序之后的对执行结果没有影响，也可以重排序。即表明不一定存在这个关系就一定不能重排序。&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;happens-before规则&lt;/p&gt;
-
-&lt;p&gt;这里有6条：程序次序规则；监视器锁规则；volatile规则；传递性规则等等。
-比如：程序次序规则，它要求一个线程中的每个操作，happens-before该线程的任何后续操作。
-这里大家去查阅详细资料。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;此时可能会有一个疑惑，既然多线程程序的先后语句满足happens-before规则中程序次序规则，为什么还会重排序？&lt;/p&gt;
-
-&lt;p&gt;其实这个问题前面已经说了，第4点，在多线程程序中，也是由多个单线程组成的。他们中的每一个线程前后是存在happens-before规则。java以单线程的角度来看待这个问题：java认为对线程中语句进行重排序是不会改变结果的。&lt;/p&gt;
-
-&lt;p&gt;因为java又不知道你这个代码是会在多线程里运行还是单线程里运行，它只保证单线程运行时，重排序后不改变执行结果，当这代码在多线程里运行时就可能出现问题。&lt;/p&gt;
-
-&lt;p&gt;所以我们就需要在多线程中进行正确的同步的一个原因。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;学习volatile语义、锁的语义、和final的语义&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;此时就可惜学习java中的Thread的实现和并发容器的实现&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;总结&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;线程一：a -&amp;gt; b -&amp;gt; c
-线程二：A -&amp;gt; B -&amp;gt; C&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;若没有重排序的结果可能是&lt;/p&gt;
-
-&lt;p&gt;a -&amp;gt; A -&amp;gt; B -&amp;gt; b -&amp;gt; c -&amp;gt; C&lt;/p&gt;
-
-&lt;p&gt;也就是单个线程的顺序不变&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;若发生了重排序结果可能是&lt;/p&gt;
-
-&lt;p&gt;b -&amp;gt; B -&amp;gt; A -&amp;gt; a -&amp;gt; c -&amp;gt; C&lt;/p&gt;
-
-&lt;p&gt;就要分析里面的代码是否有happens-before的关系以及对每个单线程而言的重拍序是否会改变运行结果来分析。&lt;/p&gt;
-
-&lt;p&gt;本文参考：《并发编写的艺术》&lt;/p&gt;
-
-&lt;p&gt;欢迎批评指正：&lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>如何根据二叉树的中序和前序后序推导出整棵二叉树</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
-      <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
-      
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E5%92%8C%E5%89%8D%E5%BA%8F%E5%90%8E%E5%BA%8F%E6%8E%A8%E5%AF%BC%E5%87%BA%E6%95%B4%E6%A3%B5%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
-      <description>
-
-&lt;p&gt;本文将主要介绍程序的主要计算流程。&lt;/p&gt;
-
-&lt;p&gt;写作目的：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;当然是为了为了加深理解二叉树遍历啦&lt;/li&gt;
-&lt;li&gt;因为受不了笔试题老出这种题目，所以做出来方便大家以后答题O(∩_∩)O~&lt;/li&gt;
-&lt;li&gt;最关键的是，每次遇到这种题目，我只会凑./捂脸&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;so，我决定花一个小时，写个程序一劳永逸，结果还没写完，我就学会了，不需要它了，送给大家~&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;首先在知道中序的前提下，任意知道一个前序、后序，即可以构建整棵二叉树，也就知道了所有顺序的遍历。&lt;/p&gt;
-
-&lt;h4 id=&#34;由前序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由前序中序推导&lt;/h4&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;已知一棵二叉树的前序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;根据前序序列的第一个元素建立根结点；&lt;/li&gt;
-&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
-&lt;li&gt;在前序序列中确定左右子树的前序序列；&lt;/li&gt;
-&lt;li&gt;由左子树的前序序列和中序序列建立左子树；&lt;/li&gt;
-&lt;li&gt;由右子树的前序序列和中序序列建立右子树。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&#34;由后序中序推导:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;由后序中序推导&lt;/h4&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;已知一棵二叉树的后序序列和中序序列，构造该二叉树的过程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;根据后序序列的最后一个元素建立根结点；&lt;/li&gt;
-&lt;li&gt;在中序序列中找到该元素，确定根结点的左右子树的中序序列；&lt;/li&gt;
-&lt;li&gt;在后序序列中确定左右子树的后序序列；&lt;/li&gt;
-&lt;li&gt;由左子树的后序序列和中序序列建立左子树；&lt;/li&gt;
-&lt;li&gt;由右子树的后序序列和中序序列建立右子树。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;引用自：&lt;a href=&#34;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&#34;&gt;http://blog.sina.com.cn/s/blog_8c243ea30102uzwo.html&lt;/a&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;核心代码:65af8147e2e31eeb70f80702d9fc030d&#34;&gt;核心代码&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;public static void calPostOrder(String preString, String midString) {
-    if (preString.length() == 0) return;
-    if (preString.length() == 1) {
-        result.add(preString.charAt(0));
-    }
-    if (preString.length() &amp;gt; 1) {
-        //前序首字母拆分中序字符串           
-        String[] resultStrings = midString.split(preString.charAt(0) + &amp;quot;&amp;quot;);
-        for (int i = 0; i &amp;lt; resultStrings.length; i++) {
-            String newPreString = findSubStringInPreORPostString(preString, resultStrings[i]);
-            calPostOrder(newPreString, resultStrings[i]);
-        }
-        result.add(preString.charAt(0));
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中findSubStringInPreORPostString()函数就是从先序字符串中取出对应中序的字符串的子串。&lt;/p&gt;
 </description>
     </item>
     
