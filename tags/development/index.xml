@@ -49,14 +49,14 @@
 &lt;li&gt;增加初始化时的磁盘缓存大小设置&lt;/li&gt;
 &lt;li&gt;增加磁盘缓存控制策略：自定义网络响应的Ttl和softTtl。&lt;/li&gt;
 &lt;li&gt;增加自定义的缓存设置相对于服务器的缓存策略的优先级控制&lt;/li&gt;
+&lt;li&gt;对用户设置不缓存的请求，跳过响应解析操作，微小提升性能。&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;li&gt;&lt;p&gt;对用户设置不缓存的请求，跳过响应解析操作，微小提升性能。&lt;/p&gt;
+&lt;h5 id=&#34;1-0-3-stable:30f9bd4fc8a12ae0d75da9a861d2ea0a&#34;&gt;1.0.3（Stable）&lt;/h5&gt;
 
-&lt;h5 id=&#34;1-0-3-stable:30f9bd4fc8a12ae0d75da9a861d2ea0a&#34;&gt;1.0.3（Stable）&lt;/h5&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;将1.0.2的缓存策略应用于对ImageLoader类&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;修复缓存控制Bug&lt;/p&gt;&lt;/li&gt;
+&lt;ol&gt;
+&lt;li&gt;将1.0.2的缓存策略应用于对ImageLoader类&lt;/li&gt;
+&lt;li&gt;修复缓存控制Bug&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h3 id=&#34;使用样例:30f9bd4fc8a12ae0d75da9a861d2ea0a&#34;&gt;使用样例&lt;/h3&gt;
