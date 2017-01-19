@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title> 浅谈Java对象回收的三种方式 &middot; Coder Yel </title>
+  <title> 多重嵌套布局下滑动冲突解决方案和思路 &middot; Coder Yel </title>
 
 <script>
 var _hmt = _hmt || [];
@@ -88,10 +88,12 @@ var _hmt = _hmt || [];
 
 		<div class="content container">
 			<div class="post">
-			 	<h1>浅谈Java对象回收的三种方式</h1>
-			  <span class="post-date">Fri, Jan 1, 2016
+			 	<h1>多重嵌套布局下滑动冲突解决方案和思路</h1>
+			  <span class="post-date">Thu, Jan 19, 2017
 			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
-        <a href="http://freedomofme.github.io//tags/java">Java&nbsp;&nbsp;</a> 
+        <a href="http://freedomofme.github.io//tags/development">Development&nbsp;&nbsp;</a> 
+      				
+        <a href="http://freedomofme.github.io//tags/golang">golang&nbsp;&nbsp;</a> 
       				
 
 			  </span>
@@ -99,36 +101,6 @@ var _hmt = _hmt || [];
       
    				</ul>
 			      
-
-<p>最近在看Java虚拟机，写点给新手和自己看的东西。</p>
-
-<h3 id="第一类-生命周期中止:6029cb9672493498e7785f8d23b0964a">第一类：生命周期中止</h3>
-
-<pre><code>void scope（）{
-    Test t = new Test();
-}
-</code></pre>
-
-<h3 id="第二类-对象无引用:6029cb9672493498e7785f8d23b0964a">第二类：对象无引用</h3>
-
-<h5 id="对象的应用被转移:6029cb9672493498e7785f8d23b0964a">对象的应用被转移：</h5>
-
-<pre><code>void life（）{
-   Test t = new Test();
-    t = new Test();
-}
-</code></pre>
-
-<h5 id="对象被赋值为null:6029cb9672493498e7785f8d23b0964a">对象被赋值为null</h5>
-
-<pre><code>void scope（）{
-   Test t = new Test();
-   t = null;
-}
-</code></pre>
-
-<p>　　</p>
-
 			</div>
 
 		
