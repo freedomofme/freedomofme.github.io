@@ -497,7 +497,7 @@ LOCAL_SRC_FILES :=$(FILE_LIST:$(LOCAL_PATH)/%=%)
 &lt;p&gt;经过一番努力，现已实现了列表能够响应以下三种情景：&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;触摸ITEM_TYPE_IMAGE滑动时：
+&lt;li&gt;滑动ITEM_TYPE_IMAGE时：
 会先根据滑动夹角判断是水平滑动还是上下滑动。
 
 &lt;ul&gt;
@@ -514,8 +514,9 @@ LOCAL_SRC_FILES :=$(FILE_LIST:$(LOCAL_PATH)/%=%)
 &lt;p&gt;水平滑动的处理方式一般有ViewPage，Gallery，HorizontalScrollview等几种。&lt;/p&gt;
 
 &lt;p&gt;这里采用在垂直RecycleView中嵌套水平RecycleView。
-主要的布局结构是这样的：
-&lt;img src=&#34;layout.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+主要的布局结构是这样的：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;layout.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;2-存在问题:0e1910fcdf867805caab27c6340158d2&#34;&gt;2.存在问题&lt;/h4&gt;
 
