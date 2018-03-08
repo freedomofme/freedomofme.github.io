@@ -1,0 +1,302 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.37.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> 30分钟掌握Mapbox静态图 &middot; Coder Yel </title>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?a8d534fbf40cda5b2aba46f0df60c4a0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/syntax.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/hyde.css">
+  
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Coder Yel" />
+
+</head>
+
+
+	
+	
+	<body class="theme-base-0c">
+		<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://github.com/freedomofme" ><img border="0" src="/github-logo-icon-16174.png" width="64" height="64" /></a>
+      <a href="http://freedomofme.github.io/"><h1>Coder Yel</h1></a>
+
+      <p class="lead">
+       Android &amp; Java 
+      
+      </p>
+
+    </div>
+
+    
+
+
+    <ul class="sidebar-nav">
+      <li><a href="/">主页</a> </li>
+      
+      
+      
+    <li> <a id=test href="/"> </a></li>
+    
+    
+      
+      
+    
+      
+      
+    
+      
+    <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
+    
+    
+      
+    <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
+    
+
+      
+        <li><a  href="/aboutme/"> 关于我 </a></li>
+      
+    </ul>
+
+   
+
+    <p>&copy; 2018. All rights reserved. </p>
+  </div>
+</div>
+
+
+
+		<div class="content container">
+			<div class="post">
+			 	<h1>30分钟掌握Mapbox静态图</h1>
+			  <span class="post-date">Thu, Nov 2, 2017
+			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
+        <a href="http://freedomofme.github.io//tags/android">Android&nbsp;&nbsp;</a> 
+      				
+
+			  </span>
+			  <ul >
+      
+   				</ul>
+			      <blockquote>
+<p>因为之前在项目中使用到了Mapbox的静态图功能，而后收到Mapbox公司的工程师约稿，仓促之间完成。本文由word转换为markdown格式，不便之处，请见谅。可前往Mapbox公司<a href="https://zhuanlan.zhihu.com/p/32863659">知乎专栏</a>和微信公众号阅读。</p>
+</blockquote>
+
+<p></p>
+
+<h1 id="什么是mapbox-静态图">什么是MapBox 静态图</h1>
+
+<p>Static maps are standalone images that can be displayed on web and mobile
+devices without the aid of a mapping library or API. They look like an embedded
+map without interactivity or controls.</p>
+
+<p>通俗的说，就是使用Mapbox公司的地图渲染服务将原本显示在地图控件中图像转换为一张静态图片。</p>
+
+<p>举个例子：</p>
+
+<p>下图显示了一张以上海市为中心，缩放级别为6，尺寸为400*300的静态图。</p>
+
+<p><img src="media/06648a6090d22d9c9108206056253d6a.tiff" alt="" /></p>
+
+<p>具体请求链接为：<a href="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/121.29,31.14,6/400x300?access_token=your-token">https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/121.29,31.14,6/400x300?access_token=your-token</a></p>
+
+<h1 id="什么时候采用静态图">什么时候采用静态图</h1>
+
+<p>当您需要在应用中展示地图时，可能会首先考虑引入一个地图SDK。然而事实上对于一些轻度使用地图的应用，亦或者是一些轻量级的应用场景（例如地图作为列表元素），完全可以使用静态图来代替地图控件。</p>
+
+<p>静态图的主要优势有以下 几点：</p>
+
+<p>1.
+平台无关性。使用静态图不需要依赖现有的平台和环境，只要能发起网络请求，也可以获取到静态图的服务。</p>
+
+<p>2.
+资源占用小。一方面，引入一个地图控件，至少需要占用数兆的内存资源，而一个静态图图片只需要数百甚至几十字节即可，同时也会较少GPU的消耗；另一方面使用静态图服务不需要为此引入地图SDK，可以明显应用的安装包提及。以上优势对于移动端的应用场景，则会表现的更为明显。</p>
+
+<p>3.上手快，功能丰富。
+Mapbox的静态图服务提供了强大的API接口，供用户在地图图像上描绘自定义路径，兴趣点，图标和网络图像。同时静态图请求以GET<br />
+方式提交服务器，这也便于开发和测试。</p>
+
+<h1 id="mapbox静态图的接口细节">Mapbox静态图的接口细节</h1>
+
+<p>以下为通用的静态图请求格式，部分参数可以省略。开发者可以根据具体需求，拼接适合的URL地址。</p>
+
+<p><a href="https://host/styles/v1/{username}/{style_id}/static/{overlay}/{lon},{lat},{zoom},{bearing},{pitch}{auto}/{width}x{height}{@2x">https://host/styles/v1/{username}/{style_id}/static/{overlay}/{lon},{lat},{zoom},{bearing},{pitch}{auto}/{width}x{height}{@2x</a>}</p>
+
+<h2 id="版本变更历史">版本变更历史</h2>
+
+<p>Mapbox的静态图的接口有V4和V1两个版本。其中V1为最新版本，V4为经典版本。如果开发者没有历史包袱的话，建议使用V1版本开发。本文中的介绍都基于V1版本。</p>
+
+<h2 id="接口细节参数">接口细节参数</h2>
+
+<h3 id="覆盖参数介绍">覆盖参数介绍</h3>
+
+<p>本小节主要介绍{overlay}参数的使用。</p>
+
+<p>使用{overlay}可以将一个或者多个元素覆盖在地图上。它支持绘制marker（标记点）、path（路径）、geojson（一种以JSON格式保存的绘制信息）。其中前两者较为常用。</p>
+
+<p>首先介绍marker：</p>
+
+<p>Mapbox支持的marker形式有四种，分别是pin-s、pin-m、pin-l和url，分别表示单个字母（A-Z）标记，数字(0-99)标记，Maki
+icon标记以及自定义marker标记。其中Maki
+icon为一个由Mapbox发起的开源地图标记图库，开发者可以免费的使用其中的素材，官方地址是<a href="https://www.mapbox.com/maki-icons/。它托管于Github，https://github.com/mapbox/maki，欢迎各位设计师的提交素材哈。">https://www.mapbox.com/maki-icons/。它托管于Github，https://github.com/mapbox/maki，欢迎各位设计师的提交素材哈。</a></p>
+
+<p>以下是一个分别绘制了字母、数字、一个Maki icon和一个自定义marker的样例 。</p>
+
+<p><img src="media/863ccf840946d6c680905657e1493b8c.tiff" alt="" /></p>
+
+<p>核心提交参数为分别：</p>
+
+<pre><code>pin-s-a+fff(-122.465,37.77343)
+
+pin-l-airport+555(-122.443,37.76965)
+
+pin-m -66+000(-122.42816,37.75965)
+
+url-https%3A%2F%2Fmapbox.com%2Fimg%2Frocket.png
+</code></pre>
+
+<p>相信各位读者可以将参数和图片元素一一对照起来。</p>
+
+<p>下面介绍path：</p>
+
+<p>path有两部分组成：路径参数和颜色参数，具体构成如下：</p>
+
+<pre><code>path-{strokeWidth}+{strokeColor}-{strokeOpacity}+{fillColor}-
+{fillOpacity}({polyline})
+</code></pre>
+
+<p>&ndash;
+ 其中路径参数{polyline},是一种将地理位置经过多线段压缩算法编码的字符串。</p>
+
+<p>该算法可以将形如(38.5, -120.2)、(40.7, -120.95)、(43.252,
+-126.453)的地理位置编码为_p~iF~ps|U_ulLnnqC_mqNvxq`\@。该方法可以极大的较少冗余信息的传输。具体算法介绍参见文末。具体实现代码Mapbox
+官方已经提供，地址为<a href="https://github.com/mapbox/polyline">https://github.com/mapbox/polyline</a></p>
+
+<ul>
+<li>颜色参数包括线宽、颜色、透明度，以及可选参数：首尾两点闭合后的填充色和透明度。</li>
+</ul>
+
+<p>如下图所示，分别为在不同path下的表现。</p>
+
+<p><img src="media/88334abeebe5d4d5929c3f6778be33dc.tiff" alt="" /></p>
+
+<p><img src="media/4016234f4cb73bcb964b8eecf011b7c3.tiff" alt="" /></p>
+
+<p>path-5+f44-0.5 path-5+f44-0.5+222-0.2</p>
+
+<h3 id="地图参数介绍">地图参数介绍</h3>
+
+<p>参数结构：{lon},{lat},{zoom},{bearing},{pitch}{auto}/{width}x{height}{\@2x}</p>
+
+<p>地图参数比较简单，
+分别是地图中心的经纬度，缩放比例，地图水平旋转度数，地图倾斜度数，地图长宽，和图像分辨率。</p>
+
+<ul>
+<li><p>水平选择90度(bearing = 90):
+<img src="media/f2b7be535197c73adc9ebc5713e42581.tiff" alt="" /></p></li>
+
+<li><p>水平倾斜45度（pitch=45）
+<img src="media/47674f2986e131c7bf13899d1ebe9890.tiff" alt="" /></p></li>
+</ul>
+
+<p>值得一提的是{auto}参数，当提交{auto}参数后，您就不必提交地图中心和缩放比例了，Mapbox会自动根据所提交覆盖参数来自动计算地图中心点和缩放比例。这是V1版本的一个新亮点哦。</p>
+
+<h3 id="查询参数介绍">查询参数介绍</h3>
+
+<p>参数结构：{attribution}{logo}{before_layer}</p>
+
+<p>以上参数类型为布尔值，主要主要控制地图中的Mapbox logo和水印显示。</p>
+
+<p>当不想在静态图中显示时，可以提交false来隐藏对应的视图，其中也涉及到一些法律相关的问题，具体参见<a href="https://www.mapbox.com/help/how-attribution-works">https://www.mapbox.com/help/how-attribution-works</a>。</p>
+
+<h2 id="自定义静态图样式">自定义静态图样式</h2>
+
+<p>之前我们所展示的静态图都使用了官方提供的streets-v10作为静态图的地图样式。与地图控件一样，Mapbox静态图也支持自定义地图样式，只需要在Mapbox
+studio中设计您所需要的样式并将样式替换streets-v10 即可。</p>
+
+<p>如下图所示为使用了自定义地图style的样例。</p>
+
+<p><img src="media/910b02169f0bf19789994a95c990c70f.tiff" alt="" /></p>
+
+<p>基于Dark样式的自定义样式</p>
+
+<h1 id="mapbox静态图开发样例">MapBox静态图开发样例</h1>
+
+<p>对于Mapbox官方在其地图SDK中已经为开发者引入了具体模块，开发者只需要配置其中参数即可。</p>
+
+<p>以Java代码为例：</p>
+
+<pre><code>MapboxStaticImage staticImage = new MapboxStaticImage.Builder()
+.setAccessToken(&quot;*your-access-token*)
+.setUsername(Constants.MAPBOX_USER)
+.setStyleId(Constants.MAPBOX_STYLE_STREETS)
+.setLon(-73.98572).setLat(40.74843) *// Image center position*
+.setZoom(16)
+.setBearing(45)
+.setPitch(60) *// Image camera parameters*
+.setWidth(500).setHeight(500) *// Image size*
+.setRetina(true) *// Retina 2x image will be returned*  .build();
+</code></pre>
+
+<p>显而易见，以上代码是典型的建造者模式。如果你不想引入SDK的话或者Mapbox的SDK还支持您所在的平台，可以动手自己开发，基于建造者模式编写一个设计良好的静态图模块。</p>
+
+<h1 id="mapbox注意细节">mapbox注意细节</h1>
+
+<h2 id="客户端缓存设计">客户端缓存设计</h2>
+
+<p>考虑到客户端的体验，请您在设计系统时添加静态图像的缓存。</p>
+
+<h2 id="静态图地址长度限制">静态图地址长度限制</h2>
+
+<p>在官方文档中提到，覆盖参数{overlay}的最大长度为2083，最多100个特性。但是在HTTP规范中，GET请求的长度是没有限制的。经过在不同浏览器实际测试，不同的浏览器和平台会对长度的限制不尽相同，一般会限制在8192或者4096。例如笔者在Chrome浏览器中提交了一个8054长度的GET请求，mapbox服务器返回正确的结果。所以开发时务必测试极端情况。</p>
+
+<p>在开发过程中，如果您使用到了自定义marker，那么您会注意到自定义marker的URL往往很长，这时可以采用图像短链接的方式减少静态图地址长度。</p>
+
+<h2 id="urlencode-编码">URLEncode 编码</h2>
+
+<p>请开发者留意，在使用自定义marker时，需正确的对图像超链接进行编码。</p>
+
+<h1 id="参考资料">参考资料</h1>
+
+<p>Mapbox静态图文档 <a href="https://www.mapbox.com/api-documentation/?language=cURL#retrieve-a-static-map-from-a-style">https://www.mapbox.com/api-documentation/?language=cURL#retrieve-a-static-map-from-a-style</a></p>
+
+<p>多线段编码算法描述 <a href="https://developers.google.com/maps/documentation/utilities/polylinealgorithm">https://developers.google.com/maps/documentation/utilities/polylinealgorithm</a></p>
+			</div>
+
+		
+
+			
+		</div>
+
+  </body>
+</html>

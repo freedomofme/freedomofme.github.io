@@ -7,7 +7,7 @@
 
   <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.15" />
+  <meta name="generator" content="Hugo 0.37.1" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
@@ -64,11 +64,23 @@ var _hmt = _hmt || [];
       <li><a href="/">主页</a> </li>
       
       
+      
     <li> <a id=test href="/"> </a></li>
     
+    
+      
+      
+    
+      
+      
+    
+      
     <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
     
+    
+      
     <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
     
 
       
@@ -78,7 +90,7 @@ var _hmt = _hmt || [];
 
    
 
-    <p>&copy; 2017. All rights reserved. </p>
+    <p>&copy; 2018. All rights reserved. </p>
   </div>
 </div>
 
@@ -96,16 +108,16 @@ var _hmt = _hmt || [];
 			  <ul >
       
    				</ul>
-			      
-
-<p>一直以来，都觉得Java和Native C的通信没有比较全面直观的教程，知道前几天看见一个大牛的总结。所以接着这个机会，对JNI调用做一些简单记录：</p>
+			      <p>一直以来，都觉得Java和Native C的通信没有比较全面直观的教程，知道前几天看见一个大牛的总结。所以接着这个机会，对JNI调用做一些简单记录：</p>
 
 <ul>
 <li>JNI的两种注册机制：静态注册和动态注册</li>
 <li>较大型项目JNI的开发框架</li>
 </ul>
 
-<h3 id="一-jni介绍:2848143d4f7cd8cc66ecf3924bd7d3e0">一、JNI介绍</h3>
+<p></p>
+
+<h3 id="一-jni介绍">一、JNI介绍</h3>
 
 <p>JNI是Java和C进行混合编程的桥梁，其中的核心点就是在Java层声明的Native方法，如何在C层中找到对应的实现。</p>
 
@@ -114,7 +126,7 @@ var _hmt = _hmt || [];
 <li>动态注册，需要提供Java中Native方法的方法签名和Native层中对应的实现函数。</li>
 </ol>
 
-<h4 id="静态注册:2848143d4f7cd8cc66ecf3924bd7d3e0">静态注册</h4>
+<h4 id="静态注册">静态注册</h4>
 
 <p>要求C/C++层的函数名符合某种特定的要求:</p>
 
@@ -156,7 +168,7 @@ JNIEXPORT jint JNICALL Java_jnicourse_hhx_com_jnidemo_StaticTest_doAdd (JNIEnv *
 
 <p>使用方法：在包含Native声明的方法的文件上右键，选择External Tool中的Javap工具。</p>
 
-<h4 id="动态注册:2848143d4f7cd8cc66ecf3924bd7d3e0">动态注册</h4>
+<h4 id="动态注册">动态注册</h4>
 
 <p>动态注册相对于静态注册，优点是不再根据特定路径查找函数的实现，带来两个好处：</p>
 
@@ -190,26 +202,21 @@ public class DynamicTest {
 
 <pre><code>static const char *className = &quot;jnicourse/hhx/com/jnidemo/DynamicTest&quot;;
 
-
 static JNINativeMethod gJni_Methods_DynamicTest[] = {
 {&quot;doTwo&quot;, &quot;(II)I&quot;, (void*)addTwoNumber},
 };
-
 
 static int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods)
 {
 jclass clazz;
 
-
  clazz = (env)-&gt;FindClass( className);
  if (clazz == NULL) {
-
 
     return -1;
 }
 int result = 0;
 if ((env)-&gt;RegisterNatives(clazz, gMethods, numMethods) &lt; 0) {
-
 
     result = -1;
 }
@@ -223,10 +230,8 @@ return result;
 
 <pre><code>jint JNI_OnLoad(JavaVM* vm, void* reserved){
 
-
 JNIEnv* env = NULL;
 jint result = -1;
-
 
 if (vm-&gt;GetEnv((void**) &amp;env, JNI_VERSION_1_4) != JNI_OK) {
     return result;
@@ -243,12 +248,12 @@ return JNI_VERSION_1_4;
 
 <p>PS：在函数返回值方面，可以做一些定制，来根据返回值判断调用jniRegisterNativeMethods是否成功。</p>
 
-<h3 id="二-简单jni开发框架介绍:2848143d4f7cd8cc66ecf3924bd7d3e0">二、简单JNI开发框架介绍</h3>
+<h3 id="二-简单jni开发框架介绍">二、简单JNI开发框架介绍</h3>
 
 <p>结构如下：
 <img src="demoOfJniRegiste_4.png" alt="" /></p>
 
-<h4 id="动态注册框架:2848143d4f7cd8cc66ecf3924bd7d3e0">动态注册框架</h4>
+<h4 id="动态注册框架">动态注册框架</h4>
 
 <p>主要由：JniHelper.h和JniHelper.cpp构成。</p>
 
@@ -272,7 +277,7 @@ return JNI_VERSION_1_4;
 <li><p>在上文的JNI_OnLoad函数进行调用register_DT2函数。</p></li>
 </ol>
 
-<h4 id="log框架:2848143d4f7cd8cc66ecf3924bd7d3e0">Log框架</h4>
+<h4 id="log框架">Log框架</h4>
 
 <p>主要由：JniDebug.h和JniDebug.cpp构成。
 做了一个简单的实现，具体请看文末贴出的文本DEMO的链接。</p>
@@ -282,7 +287,7 @@ return JNI_VERSION_1_4;
 <pre><code>LOCAL_LDLIBS += -L$(SYSROOT)/usr/lib -llog
 </code></pre>
 
-<h4 id="注意事项:2848143d4f7cd8cc66ecf3924bd7d3e0">注意事项</h4>
+<h4 id="注意事项">注意事项</h4>
 
 <ol>
 <li><p>在Android.mk中的添加.cpp文件。</p>
@@ -296,14 +301,13 @@ LOCAL_SRC_FILES :=$(FILE_LIST:$(LOCAL_PATH)/%=%)
 </code></pre></li>
 </ol>
 
-<h3 id="参考文献:2848143d4f7cd8cc66ecf3924bd7d3e0">参考文献</h3>
+<h3 id="参考文献">参考文献</h3>
 
 <ol>
 <li>很棒的文章，推荐。另外已经和此文作者进行Email沟通。<a href="http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/">http://zhixinliu.com/2015/07/01/2015-07-01-jni-register/</a></li>
 <li>介绍了一种使用实验性的Gradle进行开发的方法。<a href="https://github.com/freekite/Android-JNITest">https://github.com/freekite/Android-JNITest</a></li>
 <li>一篇比较详细的JNI文章。<a href="https://my.oschina.net/wolfcs/blog/111309">https://my.oschina.net/wolfcs/blog/111309</a></li>
 </ol>
-
 			</div>
 
 		

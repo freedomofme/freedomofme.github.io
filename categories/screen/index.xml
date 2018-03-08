@@ -7,59 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 13 Aug 2016 01:59:36 +0800</lastBuildDate>
-    <atom:link href="http://freedomofme.github.io/categories/screen/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://freedomofme.github.io/categories/screen/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>记Screen命令简单流程</title>
-      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0Screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</link>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</link>
       <pubDate>Sat, 13 Aug 2016 01:59:36 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0Screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</guid>
-      <description>
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</guid>
+      <description>&lt;p&gt;&lt;em&gt;明天还要去加班，今夜如此迷人，不敢轻易入睡。Screen误我啊&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;明天还要去加班，今夜如此迷人，不敢轻易入睡。Screen误我啊&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;之前一直用Nohup这类简单的命令来后台执行命令。不过最近想抓点东西，后来做个分词，企图发现点什么好玩的东西。你懂得，七夕节，无非就是抓点男女之间的情话。&lt;/p&gt;
-
-&lt;p&gt;结果手头没有爬虫框架，没有代理。。。悲剧，还记得上次自己好好认真写的时候是为了给自己人人网刷票（这网站就是运营、转型不善的电信代表，豆瓣也是类似）。然后就是用Java随便鼓捣了一点(别问我威慑呢么没用Python。。)&lt;/p&gt;
-
-&lt;p&gt;花了二三个小时写好了，打了个jar包，笔记本没电电源，估计跑不到明天早晨回公司就会没电。。。才想起来之前买了一个云服务器，结果ssh连接之后没法后台执行程序。要是以往的话，应该就是&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ctrl + Z，然后bg命令了。&lt;/li&gt;
-&lt;li&gt;Nohup命令，不过NoHup在关闭了终端之后没法重新回到之前的后台任务。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;不过搜索了，发现Screen不错，就试试。&lt;/p&gt;
-
-&lt;h3 id=&#34;正经点-虽然没人看:3bbaff0247f0606dae87a6b87084fdcf&#34;&gt;正经点，虽然没人看&lt;/h3&gt;
-
-&lt;h5 id=&#34;准备:3bbaff0247f0606dae87a6b87084fdcf&#34;&gt;准备&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;安装: 过程请见文末链接。&lt;/li&gt;
-&lt;li&gt;结构：Screen可以可以管理多个screen，一个screen可以拥有多个windows。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&#34;开始使用:3bbaff0247f0606dae87a6b87084fdcf&#34;&gt;开始使用&lt;/h5&gt;
-
-&lt;p&gt;将常用命令记录于下：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;screen -list 列出screen的基本情况&lt;/li&gt;
-&lt;li&gt;screen -t name 新建一个名为name的screen&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后c 在当前screen中新建windows&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后” &amp;ldquo;(双引号) “ 列出当前screen的windows，可以在此切换windows&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”k“ 删除当前screen的某一个windows。如果一个screen的所有windows都被删除了，那么该screen也会被删除。&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”A“ 对windows重命名&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”d“ 退出当前screen 保持后台运行&lt;/li&gt;
-&lt;li&gt;screen -r 重新连接一个screen&lt;/li&gt;
-&lt;li&gt;screen -p ID 重新连接特定的screen，其中的 ID 是一个数字或名称。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;详细记载请见IBM的developerworks资料库：
-&lt;a href=&#34;https://www.ibm.com/developerworks/cn/aix/library/au-gnu_screen/&#34;&gt;https://www.ibm.com/developerworks/cn/aix/library/au-gnu_screen/&lt;/a&gt;&lt;/p&gt;
-</description>
+&lt;p&gt;之前一直用Nohup这类简单的命令来后台执行命令。不过最近想抓点东西，后来做个分词，企图发现点什么好玩的东西。你懂得，七夕节，无非就是抓点男女之间的情话。
+&lt;/p&gt;</description>
     </item>
     
   </channel>

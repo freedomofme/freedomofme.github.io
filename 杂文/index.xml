@@ -7,130 +7,48 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 13 Aug 2016 01:59:36 +0800</lastBuildDate>
-    <atom:link href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>记Screen命令简单流程</title>
-      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0Screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</link>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</link>
       <pubDate>Sat, 13 Aug 2016 01:59:36 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0Screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</guid>
-      <description>
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</guid>
+      <description>&lt;p&gt;&lt;em&gt;明天还要去加班，今夜如此迷人，不敢轻易入睡。Screen误我啊&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;明天还要去加班，今夜如此迷人，不敢轻易入睡。Screen误我啊&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;之前一直用Nohup这类简单的命令来后台执行命令。不过最近想抓点东西，后来做个分词，企图发现点什么好玩的东西。你懂得，七夕节，无非就是抓点男女之间的情话。&lt;/p&gt;
-
-&lt;p&gt;结果手头没有爬虫框架，没有代理。。。悲剧，还记得上次自己好好认真写的时候是为了给自己人人网刷票（这网站就是运营、转型不善的电信代表，豆瓣也是类似）。然后就是用Java随便鼓捣了一点(别问我威慑呢么没用Python。。)&lt;/p&gt;
-
-&lt;p&gt;花了二三个小时写好了，打了个jar包，笔记本没电电源，估计跑不到明天早晨回公司就会没电。。。才想起来之前买了一个云服务器，结果ssh连接之后没法后台执行程序。要是以往的话，应该就是&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ctrl + Z，然后bg命令了。&lt;/li&gt;
-&lt;li&gt;Nohup命令，不过NoHup在关闭了终端之后没法重新回到之前的后台任务。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;不过搜索了，发现Screen不错，就试试。&lt;/p&gt;
-
-&lt;h3 id=&#34;正经点-虽然没人看:3bbaff0247f0606dae87a6b87084fdcf&#34;&gt;正经点，虽然没人看&lt;/h3&gt;
-
-&lt;h5 id=&#34;准备:3bbaff0247f0606dae87a6b87084fdcf&#34;&gt;准备&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;安装: 过程请见文末链接。&lt;/li&gt;
-&lt;li&gt;结构：Screen可以可以管理多个screen，一个screen可以拥有多个windows。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&#34;开始使用:3bbaff0247f0606dae87a6b87084fdcf&#34;&gt;开始使用&lt;/h5&gt;
-
-&lt;p&gt;将常用命令记录于下：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;screen -list 列出screen的基本情况&lt;/li&gt;
-&lt;li&gt;screen -t name 新建一个名为name的screen&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后c 在当前screen中新建windows&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后” &amp;ldquo;(双引号) “ 列出当前screen的windows，可以在此切换windows&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”k“ 删除当前screen的某一个windows。如果一个screen的所有windows都被删除了，那么该screen也会被删除。&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”A“ 对windows重命名&lt;/li&gt;
-&lt;li&gt;Ctrl-a，然后”d“ 退出当前screen 保持后台运行&lt;/li&gt;
-&lt;li&gt;screen -r 重新连接一个screen&lt;/li&gt;
-&lt;li&gt;screen -p ID 重新连接特定的screen，其中的 ID 是一个数字或名称。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;详细记载请见IBM的developerworks资料库：
-&lt;a href=&#34;https://www.ibm.com/developerworks/cn/aix/library/au-gnu_screen/&#34;&gt;https://www.ibm.com/developerworks/cn/aix/library/au-gnu_screen/&lt;/a&gt;&lt;/p&gt;
-</description>
+&lt;p&gt;之前一直用Nohup这类简单的命令来后台执行命令。不过最近想抓点东西，后来做个分词，企图发现点什么好玩的东西。你懂得，七夕节，无非就是抓点男女之间的情话。
+&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>记第一次翻译For开源社区</title>
-      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91For%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/</link>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91for%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/</link>
       <pubDate>Sat, 02 Jan 2016 17:46:45 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91For%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/</guid>
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91for%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/</guid>
       <description>&lt;p&gt;今晚在用火狐的Firebug，有点问题，去火狐社区找答案，结果去了火狐市场，发现还是英文，还有一个邀请翻译的按钮：&lt;/p&gt;
 
 &lt;p&gt;好吧，难得今晚心情不错，就去翻译下吧~~~嘿嘿&lt;/p&gt;
 
-&lt;p&gt;先是注册个了火狐社区的账号，申请做志愿者的翻译工作，随后就挑了这篇文章开始翻译啦~&lt;/p&gt;
-
-&lt;p&gt;其实在两个小时前是这样的，“这个篇文章尚没有中文翻译版”。&lt;/p&gt;
-
-&lt;p&gt;花了半个小时时间，把它从英文版变为了中文版~~~&lt;/p&gt;
-
-&lt;p&gt;这是链接：&lt;a href=&#34;https://support.mozilla.org/zh-CN/kb/%E8%8B%B9%E6%9E%9C%E7%94%B5%E8%84%91-%E5%AE%89%E5%85%A8-%E8%AE%BE%E7%BD%AE-%E7%81%AB%E7%8B%90-%E5%BA%94%E7%94%A8%E5%B8%82%E5%9C%BA&#34;&gt;https://support.mozilla.org/zh-CN/kb/%E8%8B%B9%E6%9E%9C%E7%94%B5%E8%84%91-%E5%AE%89%E5%85%A8-%E8%AE%BE%E7%BD%AE-%E7%81%AB%E7%8B%90-%E5%BA%94%E7%94%A8%E5%B8%82%E5%9C%BA&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;翻译的好烂~，人家审核的妹子还通过了~~~感觉不错&lt;/p&gt;
-
-&lt;p&gt;最后还留了个名&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;22.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;哈哈，收到邮件的时候还是蛮开心的
-&lt;img src=&#34;33.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-</description>
+&lt;p&gt;先是注册个了火狐社区的账号，申请做志愿者的翻译工作，随后就挑了这篇文章开始翻译啦~
+    &lt;/p&gt;</description>
     </item>
     
     <item>
       <title>解决mac的日历问题：服务器响应一个错误</title>
-      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</link>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</link>
       <pubDate>Fri, 01 Jan 2016 17:56:45 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</guid>
-      <description>
-
-&lt;p&gt;出了一个问题好久，平时也不用这个同步不靠谱的日历。今晚花点时间解决了下。&lt;/p&gt;
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/</guid>
+      <description>&lt;p&gt;出了一个问题好久，平时也不用这个同步不靠谱的日历。今晚花点时间解决了下。&lt;/p&gt;
 
 &lt;p&gt;更新：三个月后，因为找到了微软的SunRise这个Android端APP实现Mac， ipad， Android日历共享啦。我就开始用这款软件了。&lt;/p&gt;
 
-&lt;p&gt;参考Apple 官网日历的问题解答。&lt;/p&gt;
-
-&lt;p&gt;当出现如下情况时：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png&#34; alt=&#34;http://images.weiphone.net/data/attachment/forum/201502/22/123351fbj1o2xvbxtxbfbt.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;正确的操作步骤:685002b936a4b907022076cedfa8a94e&#34;&gt;正确的操作步骤&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;退出日历和提醒事项。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;从 Apple () 菜单中选取“系统偏好设置”，然后点按“iCloud”。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;点按注记格以取消选中“日历与提醒事项”。在 OS X Mountain Lion 中，取消选中“日历与提醒事项”的单个注记格。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;关闭“系统偏好设置”，再稍等片刻。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;打开“系统偏好设置”，并点按“iCloud”。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;点按注记格以选择“日历与提醒事项”。在 OS X Mountain Lion 中选择“日历与提醒事项”的单个注记格。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;关闭“系统偏好设置”。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;打开“提醒事项”并进行测试，以查看问题是否已解决。&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;经过以上操作后可以重启下。&lt;/p&gt;
-</description>
+&lt;p&gt;参考Apple 官网日历的问题解答。
+&lt;/p&gt;</description>
     </item>
     
   </channel>

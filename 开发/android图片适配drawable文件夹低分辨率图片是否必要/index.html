@@ -1,0 +1,142 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.37.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> Android图片适配，drawable文件夹，低分辨率图片是否必要 &middot; Coder Yel </title>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?a8d534fbf40cda5b2aba46f0df60c4a0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/syntax.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/hyde.css">
+  
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Coder Yel" />
+
+</head>
+
+
+	
+	
+	<body class="theme-base-0c">
+		<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://github.com/freedomofme" ><img border="0" src="/github-logo-icon-16174.png" width="64" height="64" /></a>
+      <a href="http://freedomofme.github.io/"><h1>Coder Yel</h1></a>
+
+      <p class="lead">
+       Android &amp; Java 
+      
+      </p>
+
+    </div>
+
+    
+
+
+    <ul class="sidebar-nav">
+      <li><a href="/">主页</a> </li>
+      
+      
+      
+    <li> <a id=test href="/"> </a></li>
+    
+    
+      
+      
+    
+      
+      
+    
+      
+    <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
+    
+    
+      
+    <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
+    
+
+      
+        <li><a  href="/aboutme/"> 关于我 </a></li>
+      
+    </ul>
+
+   
+
+    <p>&copy; 2018. All rights reserved. </p>
+  </div>
+</div>
+
+
+
+		<div class="content container">
+			<div class="post">
+			 	<h1>Android图片适配，drawable文件夹，低分辨率图片是否必要</h1>
+			  <span class="post-date">Sat, Jan 2, 2016
+			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
+        <a href="http://freedomofme.github.io//tags/android">Android&nbsp;&nbsp;</a> 
+      				
+
+			  </span>
+			  <ul >
+      
+   				</ul>
+			      <p>我们知道，Android提供了几种不同分辨率的bitmap，来对应不同手机屏幕的密度。对应关系如下：</p>
+
+<p>xxhdpi:3.0
+xhdpi: 2.0
+hdpi: 1.5
+mdpi: 1.0
+ldpi: 0.75
+于是一个问题产生了：</p>
+
+<p>从接触Android开发时就有了，既然Android能自动转换，为什么还要浪费用户空间去存储低分辨率的图片？
+</p>
+
+<p>查了一些资料，终于在Google的开发者网站上找到了解答：
+&gt;
+Note: Low-density (ldpi) resources aren’t always necessary. When you provide hdpi assets, the system scales them down by one half to properly fit ldpi screens.</p>
+
+<p><a href="http://developer.android.com/training/basics/supporting-devices/screens.html">Link</a></p>
+
+<p>大概意思就是低分辨率的资源不是总是必要的，当你提供高分辨率的资源了，系统会缩放图片来适应低分率的屏幕。</p>
+
+<p>问题到此就解答完了。</p>
+
+<p>有个疑问：就是假如未放置了低分辨率图片，让系统需要时自动转换，是否影响响应速度（系统是否会缓存）？</p>
+			</div>
+
+		
+
+			
+		</div>
+
+  </body>
+</html>

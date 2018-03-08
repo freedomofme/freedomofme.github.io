@@ -1,0 +1,150 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.37.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> Android获取联系人示例，从数据库加载，带首字母标签 &middot; Coder Yel </title>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?a8d534fbf40cda5b2aba46f0df60c4a0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/syntax.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/hyde.css">
+  
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Coder Yel" />
+
+</head>
+
+
+	
+	
+	<body class="theme-base-0c">
+		<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://github.com/freedomofme" ><img border="0" src="/github-logo-icon-16174.png" width="64" height="64" /></a>
+      <a href="http://freedomofme.github.io/"><h1>Coder Yel</h1></a>
+
+      <p class="lead">
+       Android &amp; Java 
+      
+      </p>
+
+    </div>
+
+    
+
+
+    <ul class="sidebar-nav">
+      <li><a href="/">主页</a> </li>
+      
+      
+      
+    <li> <a id=test href="/"> </a></li>
+    
+    
+      
+      
+    
+      
+      
+    
+      
+    <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
+    
+    
+      
+    <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
+    
+
+      
+        <li><a  href="/aboutme/"> 关于我 </a></li>
+      
+    </ul>
+
+   
+
+    <p>&copy; 2018. All rights reserved. </p>
+  </div>
+</div>
+
+
+
+		<div class="content container">
+			<div class="post">
+			 	<h1>Android获取联系人示例，从数据库加载，带首字母标签</h1>
+			  <span class="post-date">Fri, Jan 1, 2016
+			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
+        <a href="http://freedomofme.github.io//tags/android">Android&nbsp;&nbsp;</a> 
+      				
+
+			  </span>
+			  <ul >
+      
+   				</ul>
+			      <p>这几天打算学习下Android联系人方面的一些东西，之前稍有涉略，不过每次都是浅尝辄止。</p>
+
+<p>推荐国内两个Link：
+</p>
+
+<p><a href="http://fanfq.iteye.com/blog/779569">Link1</a></p>
+
+<p><a href="http://www.icodelogic.com/?p=453">Link2</a></p>
+
+<p>以上两个都是读取联系人。</p>
+
+<p>第一个Link采用多次查询每次查询一条数据的方式，比较好理解，但是效率底。250条记录（6s）</p>
+
+<p>第二个Link采用的Querying entities，返回数据集，大大减少了查询次数。250条记录（200ms）。因为采用了联接的数据库查询方式（不大熟悉的话可以温习下数据库方面的知识），大大减少了查询次数。</p>
+
+<p>google上有对contacts的比较详细的教材,也有讲到到
+Querying entities：<a href="http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html">http://developer.android.com/intl/zh-cn/guide/topics/providers/contacts-provider.html</a></p>
+
+<p>推荐《精通Android》书里的介绍也不错</p>
+
+<h3 id="demo">Demo</h3>
+
+<p>根据最开始的两个link，做成一个Demo，给大家参考和批评：</p>
+
+<p>Demo下载地址：</p>
+
+<p><a href="http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip">http://files.cnblogs.com/files/FightForFreedom/ContactsDataBase.zip</a></p>
+
+<p>截图如下：</p>
+
+<p><img src="http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png" alt="http://images0.cnblogs.com/blog2015/739642/201508/091350416436298.png" /></p>
+			</div>
+
+		
+
+			
+		</div>
+
+  </body>
+</html>

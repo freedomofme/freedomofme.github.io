@@ -7,160 +7,58 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 01 Apr 2016 19:52:07 +0800</lastBuildDate>
-    <atom:link href="http://freedomofme.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://freedomofme.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Java重排序和happens-before学习思路</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</link>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/java-%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</link>
       <pubDate>Fri, 01 Apr 2016 19:52:07 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/Java%20%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</guid>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/java-%E9%87%8D%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF/</guid>
       <description>&lt;p&gt;鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。&lt;/p&gt;
 
 &lt;p&gt;我觉得理解这些概念，比较好的思路是这样的：&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;p&gt;知道什么是重排序？
-&amp;gt; 重排序是编译器和处理器为了优化性能而对指令执行顺序进行重新排序。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;现在你已经知道了什么是重排序，认识下重排序的发生位置：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;编译器重排序&lt;/li&gt;
-&lt;li&gt;指令级并行重排序&lt;/li&gt;
-&lt;li&gt;内存系统重排序&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;理解单线程程序中可能发生指令的重排序&lt;/p&gt;
-
-&lt;p&gt;这就是说在单线程中，编译器也会进行重排序。但是为什么我以前写了这么久单线程的Java程序，都没有发现指令重排序这个问题？&lt;/p&gt;
-
-&lt;p&gt;原因是java遵从as-if-serial语义，即单线程的程序即使发生了重排序，程序的执行结果不能被改变。所以，即使发生了重排序，执行结果是一样的，所以你感觉不到。&lt;/p&gt;
-
-&lt;p&gt;比如说，对于有数据依赖的语句进行重排序，就会改变结果，所以会禁止此种情况的重排序。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;理解happens-before的定义&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;如果一个操作happens-before另一个操作，那么第一个操作的执行结果对第二个操作可见。且第一个操作排在第二个操作之前。&lt;/li&gt;
-&lt;li&gt;两个操作之间存在happens-before关系，如果重排序之后的对执行结果没有影响，也可以重排序。即表明不一定存在这个关系就一定不能重排序。&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;happens-before规则&lt;/p&gt;
-
-&lt;p&gt;这里有6条：程序次序规则；监视器锁规则；volatile规则；传递性规则等等。
-比如：程序次序规则，它要求一个线程中的每个操作，happens-before该线程的任何后续操作。
-这里大家去查阅详细资料。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;此时可能会有一个疑惑，既然多线程程序的先后语句满足happens-before规则中程序次序规则，为什么还会重排序？&lt;/p&gt;
-
-&lt;p&gt;其实这个问题前面已经说了，第4点，在多线程程序中，也是由多个单线程组成的。他们中的每一个线程前后是存在happens-before规则。java以单线程的角度来看待这个问题：java认为对线程中语句进行重排序是不会改变结果的。&lt;/p&gt;
-
-&lt;p&gt;因为java又不知道你这个代码是会在多线程里运行还是单线程里运行，它只保证单线程运行时，重排序后不改变执行结果，当这代码在多线程里运行时就可能出现问题。&lt;/p&gt;
-
-&lt;p&gt;所以我们就需要在多线程中进行正确的同步的一个原因。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;学习volatile语义、锁的语义、和final的语义&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;此时就可惜学习java中的Thread的实现和并发容器的实现&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;总结&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;线程一：a -&amp;gt; b -&amp;gt; c
-线程二：A -&amp;gt; B -&amp;gt; C&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;若没有重排序的结果可能是&lt;/p&gt;
-
-&lt;p&gt;a -&amp;gt; A -&amp;gt; B -&amp;gt; b -&amp;gt; c -&amp;gt; C&lt;/p&gt;
-
-&lt;p&gt;也就是单个线程的顺序不变&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;若发生了重排序结果可能是&lt;/p&gt;
-
-&lt;p&gt;b -&amp;gt; B -&amp;gt; A -&amp;gt; a -&amp;gt; c -&amp;gt; C&lt;/p&gt;
-
-&lt;p&gt;就要分析里面的代码是否有happens-before的关系以及对每个单线程而言的重拍序是否会改变运行结果来分析。&lt;/p&gt;
-
-&lt;p&gt;本文参考：《并发编写的艺术》&lt;/p&gt;
-
-&lt;p&gt;欢迎批评指正：&lt;a href=&#34;mailto:xiegeixiong@gmail.com&#34;&gt;xiegeixiong@gmail.com&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+&amp;gt; 重排序是编译器和处理器为了优化性能而对指令执行顺序进行重新排序。
+&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>字符集乱码问题:ISO-8859-1和GBK</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98-ISO-8859-1%E5%92%8CGBK/</link>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98-iso-8859-1%E5%92%8Cgbk/</link>
       <pubDate>Fri, 01 Jan 2016 17:59:16 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98-ISO-8859-1%E5%92%8CGBK/</guid>
-      <description>
-
-&lt;p&gt;首先引用百度知道的问题：
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98-iso-8859-1%E5%92%8Cgbk/</guid>
+      <description>&lt;p&gt;首先引用百度知道的问题：
 &amp;gt;
 &lt;a href=&#34;http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81&#34;&gt;帮忙翻译 ÄãºÃ£¬¿Í»§ÉÐÔ&amp;amp;Uacu&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;即：出现了以下字符乱码
 ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡
-如何解决？&lt;/p&gt;
-
-&lt;h3 id=&#34;方法一:e4ec21571305cc652d1ed9bd63a35f48&#34;&gt;方法一：&lt;/h3&gt;
-
-&lt;p&gt;String s_iso88591 = new String(&amp;ldquo;ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡ &amp;ldquo;.getBytes(&amp;ldquo;ISO-8859-1&amp;rdquo;),&amp;ldquo;GBK&amp;rdquo;);
-输出s_iso88591即可。&lt;/p&gt;
-
-&lt;h3 id=&#34;方法二:e4ec21571305cc652d1ed9bd63a35f48&#34;&gt;方法二：&lt;/h3&gt;
-
-&lt;p&gt;String testString = &amp;ldquo;你好&amp;rdquo;;
-byte[] hold = testString.getBytes(&amp;ldquo;GBK&amp;rdquo;);
-for (int i = 0 ; i &amp;lt; hold.length; i++) {
-System.out.println((char)(256 + hold[i]));
-}
-输出: ÄãºÃ&lt;/p&gt;
-
-&lt;p&gt;由此可见好好理解字符集还是相当必要的。&lt;/p&gt;
-</description>
+如何解决？
+&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>浅谈Java对象回收的三种方式</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E6%B5%85%E8%B0%88Java%E5%AF%B9%E8%B1%A1%E5%9B%9E%E6%94%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E6%B5%85%E8%B0%88java%E5%AF%B9%E8%B1%A1%E5%9B%9E%E6%94%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
       <pubDate>Fri, 01 Jan 2016 17:59:06 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E6%B5%85%E8%B0%88Java%E5%AF%B9%E8%B1%A1%E5%9B%9E%E6%94%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
-      <description>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E6%B5%85%E8%B0%88java%E5%AF%B9%E8%B1%A1%E5%9B%9E%E6%94%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
+      <description>&lt;p&gt;最近在看Java虚拟机，写点给新手和自己看的东西。&lt;/p&gt;
 
-&lt;p&gt;最近在看Java虚拟机，写点给新手和自己看的东西。&lt;/p&gt;
-
-&lt;h3 id=&#34;第一类-生命周期中止:6029cb9672493498e7785f8d23b0964a&#34;&gt;第一类：生命周期中止&lt;/h3&gt;
+&lt;h3 id=&#34;第一类-生命周期中止&#34;&gt;第一类：生命周期中止&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;void scope（）{
     Test t = new Test();
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;第二类-对象无引用:6029cb9672493498e7785f8d23b0964a&#34;&gt;第二类：对象无引用&lt;/h3&gt;
-
-&lt;h5 id=&#34;对象的应用被转移:6029cb9672493498e7785f8d23b0964a&#34;&gt;对象的应用被转移：&lt;/h5&gt;
-
-&lt;pre&gt;&lt;code&gt;void life（）{
-   Test t = new Test();
-    t = new Test();
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h5 id=&#34;对象被赋值为null:6029cb9672493498e7785f8d23b0964a&#34;&gt;对象被赋值为null&lt;/h5&gt;
-
-&lt;pre&gt;&lt;code&gt;void scope（）{
-   Test t = new Test();
-   t = null;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　　&lt;/p&gt;
-</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

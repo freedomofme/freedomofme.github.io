@@ -1,0 +1,192 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.37.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> Java重排序和happens-before学习思路 &middot; Coder Yel </title>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?a8d534fbf40cda5b2aba46f0df60c4a0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/syntax.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/hyde.css">
+  
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Coder Yel" />
+
+</head>
+
+
+	
+	
+	<body class="theme-base-0c">
+		<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://github.com/freedomofme" ><img border="0" src="/github-logo-icon-16174.png" width="64" height="64" /></a>
+      <a href="http://freedomofme.github.io/"><h1>Coder Yel</h1></a>
+
+      <p class="lead">
+       Android &amp; Java 
+      
+      </p>
+
+    </div>
+
+    
+
+
+    <ul class="sidebar-nav">
+      <li><a href="/">主页</a> </li>
+      
+      
+      
+    <li> <a id=test href="/"> </a></li>
+    
+    
+      
+      
+    
+      
+      
+    
+      
+    <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
+    
+    
+      
+    <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
+    
+
+      
+        <li><a  href="/aboutme/"> 关于我 </a></li>
+      
+    </ul>
+
+   
+
+    <p>&copy; 2018. All rights reserved. </p>
+  </div>
+</div>
+
+
+
+		<div class="content container">
+			<div class="post">
+			 	<h1>Java重排序和happens-before学习思路</h1>
+			  <span class="post-date">Fri, Apr 1, 2016
+			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
+        <a href="http://freedomofme.github.io//tags/java">Java&nbsp;&nbsp;</a> 
+      				
+
+			  </span>
+			  <ul >
+      
+   				</ul>
+			      <p>鉴于在互联网上大家资料抄袭严重，本文主要介绍学习Java中的重排序和happens-before关系等相关概念的学习思路。建议大家看书系统学习。</p>
+
+<p>我觉得理解这些概念，比较好的思路是这样的：</p>
+
+<ol>
+<li><p>知道什么是重排序？
+&gt; 重排序是编译器和处理器为了优化性能而对指令执行顺序进行重新排序。
+</p></li>
+
+<li><p>现在你已经知道了什么是重排序，认识下重排序的发生位置：</p>
+
+<ul>
+<li>编译器重排序</li>
+<li>指令级并行重排序</li>
+<li>内存系统重排序</li>
+</ul></li>
+
+<li><p>理解单线程程序中可能发生指令的重排序</p>
+
+<p>这就是说在单线程中，编译器也会进行重排序。但是为什么我以前写了这么久单线程的Java程序，都没有发现指令重排序这个问题？</p>
+
+<p>原因是java遵从as-if-serial语义，即单线程的程序即使发生了重排序，程序的执行结果不能被改变。所以，即使发生了重排序，执行结果是一样的，所以你感觉不到。</p>
+
+<p>比如说，对于有数据依赖的语句进行重排序，就会改变结果，所以会禁止此种情况的重排序。</p></li>
+
+<li><p>理解happens-before的定义</p>
+
+<ul>
+<li>如果一个操作happens-before另一个操作，那么第一个操作的执行结果对第二个操作可见。且第一个操作排在第二个操作之前。</li>
+<li>两个操作之间存在happens-before关系，如果重排序之后的对执行结果没有影响，也可以重排序。即表明不一定存在这个关系就一定不能重排序。</li>
+</ul></li>
+
+<li><p>happens-before规则</p>
+
+<p>这里有6条：程序次序规则；监视器锁规则；volatile规则；传递性规则等等。
+比如：程序次序规则，它要求一个线程中的每个操作，happens-before该线程的任何后续操作。
+这里大家去查阅详细资料。</p></li>
+
+<li><p>此时可能会有一个疑惑，既然多线程程序的先后语句满足happens-before规则中程序次序规则，为什么还会重排序？</p>
+
+<p>其实这个问题前面已经说了，第4点，在多线程程序中，也是由多个单线程组成的。他们中的每一个线程前后是存在happens-before规则。java以单线程的角度来看待这个问题：java认为对线程中语句进行重排序是不会改变结果的。</p>
+
+<p>因为java又不知道你这个代码是会在多线程里运行还是单线程里运行，它只保证单线程运行时，重排序后不改变执行结果，当这代码在多线程里运行时就可能出现问题。</p>
+
+<p>所以我们就需要在多线程中进行正确的同步的一个原因。</p></li>
+
+<li><p>学习volatile语义、锁的语义、和final的语义</p></li>
+
+<li><p>此时就可惜学习java中的Thread的实现和并发容器的实现</p></li>
+
+<li><p>总结</p></li>
+</ol>
+
+<p>线程一：a -&gt; b -&gt; c
+线程二：A -&gt; B -&gt; C</p>
+
+<ul>
+<li><p>若没有重排序的结果可能是</p>
+
+<p>a -&gt; A -&gt; B -&gt; b -&gt; c -&gt; C</p>
+
+<p>也就是单个线程的顺序不变</p></li>
+
+<li><p>若发生了重排序结果可能是</p>
+
+<p>b -&gt; B -&gt; A -&gt; a -&gt; c -&gt; C</p>
+
+<p>就要分析里面的代码是否有happens-before的关系以及对每个单线程而言的重拍序是否会改变运行结果来分析。</p>
+
+<p>本文参考：《并发编写的艺术》</p>
+
+<p>欢迎批评指正：<a href="mailto:xiegeixiong@gmail.com">xiegeixiong@gmail.com</a></p></li>
+</ul>
+			</div>
+
+		
+
+			
+		</div>
+
+  </body>
+</html>

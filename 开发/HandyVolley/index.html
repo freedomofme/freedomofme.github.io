@@ -7,7 +7,7 @@
 
   <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.15" />
+  <meta name="generator" content="Hugo 0.37.1" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
@@ -64,11 +64,23 @@ var _hmt = _hmt || [];
       <li><a href="/">主页</a> </li>
       
       
+      
     <li> <a id=test href="/"> </a></li>
     
+    
+      
+      
+    
+      
+      
+    
+      
     <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
     
+    
+      
     <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
     
 
       
@@ -78,7 +90,7 @@ var _hmt = _hmt || [];
 
    
 
-    <p>&copy; 2017. All rights reserved. </p>
+    <p>&copy; 2018. All rights reserved. </p>
   </div>
 </div>
 
@@ -96,13 +108,12 @@ var _hmt = _hmt || [];
 			  <ul >
       
    				</ul>
-			      
+			      <p>本文主要介绍了一个为<a href="https://github.com/freedomofme/Netease">仿网易新闻APP</a>的而定制的Volley框架。</p>
 
-<p>本文主要介绍了一个为<a href="https://github.com/freedomofme/Netease">仿网易新闻APP</a>的而定制的Volley框架。</p>
+<p>这也是为什么要去修改一个2013年发布的老框架的原因，主要是为了兼容以前的代码。（如果是新上线没有历史负担的项目，网络库(retrofit等)和图片库(glide)等库的性能要更优秀。）
+</p>
 
-<p>这也是为什么要去修改一个2013年发布的老框架的原因，主要是为了兼容以前的代码。（如果是新上线没有历史负担的项目，网络库(retrofit等)和图片库(glide)等库的性能要更优秀。）</p>
-
-<h3 id="一-介绍:c8ec1fc3ec01d9d6630de439b81fa1a7">一、介绍</h3>
+<h3 id="一-介绍">一、介绍</h3>
 
 <p>本项目的基于2016年12月29号的原版Volley库开发，也是截止目前的最新版本。从提交日志来看项目代码基于稳定，不会存在重大缺陷。</p>
 
@@ -114,17 +125,17 @@ var _hmt = _hmt || [];
 <pre><code>compile 'site.okhttp.codeyel:HandyVolley:1.0.3'
 </code></pre>
 
-<h3 id="第二类-更新细节:c8ec1fc3ec01d9d6630de439b81fa1a7">第二类：更新细节</h3>
+<h3 id="第二类-更新细节">第二类：更新细节</h3>
 
-<h5 id="1-0-0:c8ec1fc3ec01d9d6630de439b81fa1a7">1.0.0</h5>
+<h5 id="1-0-0">1.0.0</h5>
 
 <p>Fork基于2016年12月29号的原版Volley库</p>
 
-<h5 id="1-0-1:c8ec1fc3ec01d9d6630de439b81fa1a7">1.0.1</h5>
+<h5 id="1-0-1">1.0.1</h5>
 
 <p>更新compileSdkVersion为23</p>
 
-<h5 id="1-0-2:c8ec1fc3ec01d9d6630de439b81fa1a7">1.0.2</h5>
+<h5 id="1-0-2">1.0.2</h5>
 
 <ol>
 <li>增加初始化时的磁盘缓存大小设置</li>
@@ -133,20 +144,22 @@ var _hmt = _hmt || [];
 <li>对用户设置不缓存的请求，跳过响应解析操作，微小提升性能。</li>
 </ol>
 
-<h5 id="1-0-3-stable:c8ec1fc3ec01d9d6630de439b81fa1a7">1.0.3（Stable）</h5>
+<h5 id="1-0-3-stable">1.0.3（Stable）</h5>
 
 <ol>
 <li>将1.0.2的缓存策略应用于对ImageLoader类</li>
 <li>修复缓存控制Bug</li>
 </ol>
 
-<h3 id="使用样例:c8ec1fc3ec01d9d6630de439b81fa1a7">使用样例</h3>
+<h3 id="使用样例">使用样例</h3>
 
 <p>经介绍区别于原本Volley的使用方法。</p>
 
 <ol>
-<li><p>增加初始化时的磁盘缓存大小设置</p></li>
+<li>增加初始化时的磁盘缓存大小设置</li>
+</ol>
 
+<ul>
 <li><p>修改方式:Volley.java文件中增加newRequestQueue方法的重载方法</p>
 
 <pre><code>public static RequestQueue newRequestQueue(Context context, HttpStack stack, int maxCacheSizeInBytes) 
@@ -154,7 +167,7 @@ var _hmt = _hmt || [];
 
 <li><p>使用方法（其中第三个参数表示瓷片缓存大小为30MB）
     mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(), null, 30 * 1024 * 1024);</p></li>
-</ol>
+</ul>
 
 <p>2.增加磁盘缓存控制策略：自定义网络响应的Ttl和softTtl</p>
 
@@ -180,10 +193,8 @@ Ttl和softTtl用来用户自定义缓存时间，通常softTtl &lt;= Ttl。</p>
 <pre><code>/** this request's default Soft time limit(unit m       illisecond) if no cache control set by web severs*/
 private int mDefaultSoftTtl = 0;
 
-
 /** this request's default time limit(unit millisecond) if no cache control set by web severs*/
 private int mDefaultTtl = 0;
-
 
 /**
 * Returns true means use the default TTL and soft TTL regardless of the server's cache control.
@@ -201,14 +212,12 @@ public final boolean shouldCache() {
 return mShouldCache;
 }
 
-
 /**
 * Return this request's soft time limit (unit seconds).
 */
 public int getDefaultSoftTtl() {
   return mDefaultSoftTtl;
 }
-
 
 /**
 * Returns this request's the time limit (unit seconds).
@@ -277,7 +286,6 @@ return mDefaultTtl;
 
 <p><a href="https://github.com/freedomofme/Netease">Netease&ndash;仿网易新闻Android端APP</a></p></li>
 </ul>
-
 			</div>
 
 		

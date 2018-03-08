@@ -7,7 +7,7 @@
 
   <link href="http://gmpg.org/xfn/11" rel="profile">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="generator" content="Hugo 0.15" />
+  <meta name="generator" content="Hugo 0.37.1" />
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
@@ -64,11 +64,23 @@ var _hmt = _hmt || [];
       <li><a href="/">主页</a> </li>
       
       
+      
     <li> <a id=test href="/"> </a></li>
     
+    
+      
+      
+    
+      
+      
+    
+      
     <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
     
+    
+      
     <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
     
 
       
@@ -78,7 +90,7 @@ var _hmt = _hmt || [];
 
    
 
-    <p>&copy; 2017. All rights reserved. </p>
+    <p>&copy; 2018. All rights reserved. </p>
   </div>
 </div>
 
@@ -96,15 +108,15 @@ var _hmt = _hmt || [];
 			  <ul >
       
    				</ul>
-			      
-
-<h3 id="前言:fd48b6ffc67f79575873dd093c0eda1d">前言</h3>
+			      <h3 id="前言">前言</h3>
 
 <p>本文主要介绍在开发<a href="https://github.com/freedomofme/Netease">仿网易新闻客户端</a>遇到的多层控件滑动冲突问题，以及如何控制事件传递的方法和解决问题的过程。</p>
 
-<h3 id="问题复现:fd48b6ffc67f79575873dd093c0eda1d">问题复现</h3>
+<p></p>
 
-<h4 id="一-局部:fd48b6ffc67f79575873dd093c0eda1d">一、局部</h4>
+<h3 id="问题复现">问题复现</h3>
+
+<h4 id="一-局部">一、局部</h4>
 
 <p>以下是界面布局的简图，问题分析将根据以下展开。
 一共有三层：</p>
@@ -119,7 +131,7 @@ var _hmt = _hmt || [];
 
 <p><img src="layout.png" alt="" /></p>
 
-<h4 id="二-问题代码:fd48b6ffc67f79575873dd093c0eda1d">二、问题代码：</h4>
+<h4 id="二-问题代码">二、问题代码：</h4>
 
 <p>item_image.xml</p>
 
@@ -171,7 +183,7 @@ public boolean onTouchEvent(MotionEvent event) {
 holder.imageView.setOnClickListener(this);          
 </code></pre>
 
-<h4 id="三-情境描述:fd48b6ffc67f79575873dd093c0eda1d">三、情境描述：</h4>
+<h4 id="三-情境描述">三、情境描述：</h4>
 
 <ul>
 <li><p>正常情景：<strong>滑动水平列表HorizontalRecyclerView时，如果一开始滑动时，列表是有滑动的空间的。那么子控件会消费事件使得后续事件一直传递，即使当列表最后滑动到尽头后继续滑动，事件也会继续传递给水平滑动控件，所以外部的viewpage不会响应。</strong></p></li>
@@ -208,9 +220,9 @@ D/HorizontalRecyclerView: parent onTouchEvent true
 
 <p><strong>当HorizontalRecyclerView到尽头时，此时用户水平滑动会导致Viewpager的切换。造成用户的不方便，需要改善。在这种情况下，理想的交互应该是Viewpager不响应此时的水平滑动。</strong></p>
 
-<h3 id="解决思路:fd48b6ffc67f79575873dd093c0eda1d">解决思路</h3>
+<h3 id="解决思路">解决思路</h3>
 
-<h4 id="第一次尝试解决:fd48b6ffc67f79575873dd093c0eda1d">第一次尝试解决：</h4>
+<h4 id="第一次尝试解决">第一次尝试解决：</h4>
 
 <ul>
 <li>思路：当水平列表滑动时，使得Viewpager不再响应水平滑动。</li>
@@ -244,7 +256,7 @@ return t;
 
 <p>能否及时调用。如果调用晚了，viewpagr已经有了偏移则此语句不会产生效果。</p>
 
-<h4 id="第二次尝试解决:fd48b6ffc67f79575873dd093c0eda1d">第二次尝试解决：</h4>
+<h4 id="第二次尝试解决">第二次尝试解决：</h4>
 
 <p>以上代码有一个问题：用户快速滑动HorizontalRecyclerView的结果不理想（内部设置点击事件），还是和原来一样。 原因上文已经说明了HorizontalRecyclerView 中的onTouchEvent方法调用不及时。</p>
 
@@ -294,7 +306,7 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
 }
 </code></pre>
 
-<h4 id="最后方案:fd48b6ffc67f79575873dd093c0eda1d">最后方案：</h4>
+<h4 id="最后方案">最后方案：</h4>
 
 <p>根据以上的尝试，我们现在理一下思路：</p>
 
@@ -310,9 +322,7 @@ public boolean onInterceptTouchEvent(MotionEvent event) {
 
 <pre><code>public boolean onTouch(View v, MotionEvent event) {
 
-
 long pressDuration = System.currentTimeMillis() - pressStartTime;
-
 
 switch (event.getAction()) {
     case MotionEvent.ACTION_DOWN: {
@@ -343,7 +353,6 @@ switch (event.getAction()) {
     }
 }
 
-
 return true;
 </code></pre>
 
@@ -365,7 +374,6 @@ switch (event.getAction()) {
         if (firstTime) {
             float deltaX = Math.abs(x - event.getX());
             float deltaY = Math.abs(y - event.getY());
-
 
             if (deltaX &gt; 1 || deltaY &gt; 1) {
                 // 水平滑动距离大于两倍的垂直距离才判断为水平
@@ -391,14 +399,14 @@ return super.onTouchEvent(event);
 <p>}</p></li>
 </ul>
 
-<h3 id="最终代码:fd48b6ffc67f79575873dd093c0eda1d">最终代码</h3>
+<h3 id="最终代码">最终代码</h3>
 
 <p>见项目的<a href="https://github.com/freedomofme/Netease">https://github.com/freedomofme/Netease</a>
 的<a href="https://github.com/freedomofme/Netease/blob/master/app/src/main/java/com/hhxplaying/neteasedemo/netease/widget/MyRecyclerView.java">HorizontalRecyclerView.java</a>和<a href="https://github.com/freedomofme/Netease/blob/master/app/src/main/java/com/hhxplaying/neteasedemo/netease/adapter/HorizontalImageRecyclerViewAdapter.java">HorizontalImageRecyclerViewAdapter</a></p>
 
 <p>文本记录了这个问题探索的正确轨迹，没有记录在实际开发中所走的弯路。写的不正确和含糊不清之处，还望斧正。</p>
 
-<h3 id="附录:fd48b6ffc67f79575873dd093c0eda1d">附录</h3>
+<h3 id="附录">附录</h3>
 
 <p><a name="end"></a></p>
 
@@ -432,7 +440,6 @@ private static final int TOUCH_SLOP = 8;
 /** * @return Distance in pixels a touch can wander before we think the user is scrolling */ 
 public int getScaledTouchSlop() { return mTouchSlop;  }
 </code></pre>
-
 			</div>
 
 		
