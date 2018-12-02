@@ -26,10 +26,10 @@
     
     <item>
       <title>自定义Volley库--HandyVolley</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/handyvolley/</link>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E8%87%AA%E5%AE%9A%E4%B9%89handyvolley/</link>
       <pubDate>Tue, 17 Jan 2017 17:45:23 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/handyvolley/</guid>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E8%87%AA%E5%AE%9A%E4%B9%89handyvolley/</guid>
       <description>&lt;p&gt;本文主要介绍了一个为&lt;a href=&#34;https://github.com/freedomofme/Netease&#34;&gt;仿网易新闻APP&lt;/a&gt;的而定制的Volley框架。&lt;/p&gt;
 
 &lt;p&gt;这也是为什么要去修改一个2013年发布的老框架的原因，主要是为了兼容以前的代码。（如果是新上线没有历史负担的项目，网络库(retrofit等)和图片库(glide)等库的性能要更优秀。）
@@ -38,10 +38,10 @@
     
     <item>
       <title>JNI静态与动态注册介绍以及Demo实现</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/demoofjniregister/</link>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/jni%E8%8C%83%E4%BE%8B/</link>
       <pubDate>Sat, 17 Sep 2016 18:31:12 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/demoofjniregister/</guid>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/jni%E8%8C%83%E4%BE%8B/</guid>
       <description>&lt;p&gt;一直以来，都觉得Java和Native C的通信没有比较全面直观的教程，知道前几天看见一个大牛的总结。所以接着这个机会，对JNI调用做一些简单记录：&lt;/p&gt;
 
 &lt;ul&gt;
@@ -54,10 +54,10 @@
     
     <item>
       <title>记Screen命令简单流程</title>
-      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</link>
+      <link>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8/</link>
       <pubDate>Sat, 13 Aug 2016 01:59:36 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E7%AE%80%E5%8D%95%E6%B5%81%E7%A8%8B/</guid>
+      <guid>http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8/</guid>
       <description>&lt;p&gt;&lt;em&gt;明天还要去加班，今夜如此迷人，不敢轻易入睡。Screen误我啊&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;之前一直用Nohup这类简单的命令来后台执行命令。不过最近想抓点东西，后来做个分词，企图发现点什么好玩的东西。你懂得，七夕节，无非就是抓点男女之间的情话。

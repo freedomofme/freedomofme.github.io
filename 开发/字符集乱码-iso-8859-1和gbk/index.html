@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title> 杂文s &middot; Coder Yel </title>
+  <title> 字符集乱码问题:ISO-8859-1和GBK &middot; Coder Yel </title>
 
 <script>
 var _hmt = _hmt || [];
@@ -36,14 +36,15 @@ var _hmt = _hmt || [];
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/index.xml" rel="alternate" type="application/rss+xml" title="Coder Yel" />
+  <link href="" rel="alternate" type="application/rss+xml" title="Coder Yel" />
 
 </head>
 
-<body class="theme-base-0c">
 
-
-<div class="sidebar">
+	
+	
+	<body class="theme-base-0c">
+		<div class="sidebar">
   <div class="container sidebar-sticky">
     <div class="sidebar-about">
       <a href="https://github.com/freedomofme" ><img border="0" src="/github-logo-icon-16174.png" width="64" height="64" /></a>
@@ -95,36 +96,48 @@ var _hmt = _hmt || [];
 
 
 
-  <div class="content container">
-    <ul class="posts">
-        
-        <li>
-          <span><a href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0screen%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8/">记Screen命令简单流程</a> 
-          	【
-        	&nbsp;<a href="http://freedomofme.github.io//tags/development">Development</a> 
+		<div class="content container">
+			<div class="post">
+			 	<h1>字符集乱码问题:ISO-8859-1和GBK</h1>
+			  <span class="post-date">Fri, Jan 1, 2016
+			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
+        <a href="http://freedomofme.github.io//tags/java">Java&nbsp;&nbsp;</a> 
       				
-        	&nbsp;<a href="http://freedomofme.github.io//tags/golang">golang</a> 
-      				】
-         &nbsp;<time class="pull-right post-list">Sat, Aug 13, 2016</time></span>
-        </li>
-        
-        <li>
-          <span><a href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%AE%B0%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BF%BB%E8%AF%91for%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">记第一次翻译For开源社区</a> 
-          	【
-        	&nbsp;<a href="http://freedomofme.github.io//tags/firefox">Firefox</a> 
-      				】
-         &nbsp;<time class="pull-right post-list">Sat, Jan 2, 2016</time></span>
-        </li>
-        
-        <li>
-          <span><a href="http://freedomofme.github.io/%E6%9D%82%E6%96%87/%E8%A7%A3%E5%86%B3mac%E7%9A%84%E6%97%A5%E5%8E%86%E9%97%AE%E9%A2%98%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%93%8D%E5%BA%94%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF/">解决mac的日历问题：服务器响应一个错误</a> 
-          	【
-        	&nbsp;<a href="http://freedomofme.github.io//tags/mac">Mac</a> 
-      				】
-         &nbsp;<time class="pull-right post-list">Fri, Jan 1, 2016</time></span>
-        </li>
-        
-    </ul>
-  </div>
-</body>
+
+			  </span>
+			  <ul >
+      
+   				</ul>
+			      <p>首先引用百度知道的问题：
+&gt;
+<a href="http://zhidao.baidu.com/question/51342167.html?qbl=relate_question_0&amp;word=%C3%84%C3%A3%C2%BA%C3%83%20%E4%B9%B1%E7%A0%81">帮忙翻译 ÄãºÃ£¬¿Í»§ÉÐÔ&amp;Uacu</a></p>
+
+<p>即：出现了以下字符乱码
+ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡
+如何解决？
+</p>
+
+<h3 id="方法一">方法一：</h3>
+
+<p>String s_iso88591 = new String(&ldquo;ÄãºÃ£¬¿Í»§ÉÐÔÚ¿¼ÂÇÖÐ£¬Ð»Ð»£¡ &ldquo;.getBytes(&ldquo;ISO-8859-1&rdquo;),&ldquo;GBK&rdquo;);
+输出s_iso88591即可。</p>
+
+<h3 id="方法二">方法二：</h3>
+
+<p>String testString = &ldquo;你好&rdquo;;
+byte[] hold = testString.getBytes(&ldquo;GBK&rdquo;);
+for (int i = 0 ; i &lt; hold.length; i++) {
+System.out.println((char)(256 + hold[i]));
+}
+输出: ÄãºÃ</p>
+
+<p>由此可见好好理解字符集还是相当必要的。</p>
+			</div>
+
+		
+
+			
+		</div>
+
+  </body>
 </html>

@@ -1,0 +1,280 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.37.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> 关于Android的ListView中CheckBox错乱 &middot; Coder Yel </title>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?a8d534fbf40cda5b2aba46f0df60c4a0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/poole.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/syntax.css">
+  <link rel="stylesheet" href="http://freedomofme.github.io/css/hyde.css">
+  
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="Coder Yel" />
+
+</head>
+
+
+	
+	
+	<body class="theme-base-0c">
+		<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://github.com/freedomofme" ><img border="0" src="/github-logo-icon-16174.png" width="64" height="64" /></a>
+      <a href="http://freedomofme.github.io/"><h1>Coder Yel</h1></a>
+
+      <p class="lead">
+       Android &amp; Java 
+      
+      </p>
+
+    </div>
+
+    
+
+
+    <ul class="sidebar-nav">
+      <li><a href="/">主页</a> </li>
+      
+      
+      
+    <li> <a id=test href="/"> </a></li>
+    
+    
+      
+      
+    
+      
+      
+    
+      
+    <li> <a id=test href="/%e5%bc%80%e5%8f%91"> 开发</a></li>
+    
+    
+      
+    <li> <a id=test href="/%e6%9d%82%e6%96%87"> 杂文</a></li>
+    
+    
+
+      
+        <li><a  href="/aboutme/"> 关于我 </a></li>
+      
+    </ul>
+
+   
+
+    <p>&copy; 2018. All rights reserved. </p>
+  </div>
+</div>
+
+
+
+		<div class="content container">
+			<div class="post">
+			 	<h1>关于Android的ListView中CheckBox错乱</h1>
+			  <span class="post-date">Fri, Jan 1, 2016
+			  		&nbsp;&nbsp;&nbsp;&nbsp;标签：
+        <a href="http://freedomofme.github.io//tags/android">Android&nbsp;&nbsp;</a> 
+      				
+
+			  </span>
+			  <ul >
+      
+   				</ul>
+			      <p>本文参考：
+&gt; <a href="http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html">ListView中getView的原理＋如何在ListView中放置多个item</a></p>
+
+<p>上文中关于说的Android中的Recycler比较模糊，Android会维持屏幕中显示的item+1个对象。但是具体的复用机制没有介绍，建议阅读源码学习。
+</p>
+
+<h3 id="关于checkbox-选中了之后-下滑之后返回就消失的问题">关于checkBox，选中了之后，下滑之后返回就消失的问题。</h3>
+
+<p>有以下两种方式供大家参考：</p>
+
+<p>data是给TextView显示的数据</p>
+
+<p>isChecked是用来记录CheckBox是否选中的。</p>
+
+<pre><code>ArrayList&lt;String&gt; data;
+ArrayList&lt;Boolean&gt; isChecked;
+ class Holder {
+        TextView name;
+        CheckBox box;
+    }
+</code></pre>
+
+<p>　　</p>
+
+<h4 id="方法一">方法一：</h4>
+
+<p>用onClickedListener,使用这个监听器可以简单的避开CheckedBox选中消失的问题。</p>
+
+<p>其中：</p>
+
+<pre><code>holder.box.setTag(i);
+</code></pre>
+
+<p>用来给监听器指明选择的索引。</p>
+
+<pre><code> @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        if(view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+            holder = new Holder();
+            holder.box = (CheckBox) view.findViewById(R.id.cb_isChecked);
+            holder.name = (TextView) view.findViewById(R.id.tv_name);
+            view.setTag(holder);
+        } else {
+            holder = (Holder) view.getTag();
+        }
+        holder.name.setText(data.get(i));
+        System.out.println(&quot;即将改变成&quot; + isChecked.get(i) + &quot;i&quot; + i);
+        holder.box.setChecked(isChecked.get(i));
+　　
+        holder.box.setTag(i);
+        holder.box.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean hold = isChecked.get((Integer) view.getTag());
+                isChecked.set((Integer) view.getTag(), !hold);
+                System.out.println(&quot;compoundButton.getTag()&quot; + view.getTag());
+            }
+        });
+        return view;
+    }
+</code></pre>
+
+<h4 id="方法二">方法二：</h4>
+
+<p>继续使用onCheckedListener这个监听器，需要注意一些问题。</p>
+
+<p>代码：和上面的一样，就是把onClickListener改成onCheckedlistener，结果就出现了选中消失的问题。</p>
+
+<p>仔细看了在logcat中看了输出的结果，发现问题的所在：</p>
+
+<p>当我们选中一个item时，假设此时item1被选中，下拉列表，到时item1隐藏，item10出现，并复用了item1的结构。</p>
+
+<p>由于在getView函数中item10被赋值是false，此时，onCheckedListener监听器响应了（如果使用onClickedListener就没有以下问题，因为它再此时不会响应）。</p>
+
+<p>问题来了：</p>
+
+<p>因为在onCheckedListener根据view.getTag()来获得索引，而此时的索引是1，就是item1对象时setTag时留下的。</p>
+
+<p>最终导致此时监听器把用来存储布尔值的线性表的索引1的位置赋值成了item10的值。</p>
+
+<p>根据问题的成因，我们需要在 onCheckedListener响应前，让view.getTag()获得正确的索引。</p>
+
+<p>其实很简单只需要将</p>
+
+<pre><code>holder.box.setTag(i);
+</code></pre>
+
+<p>放到</p>
+
+<pre><code>holder.box.setChecked(isChecked.get(i));
+</code></pre>
+
+<p>前面就可以了。
+  此解决方案的完整代码：</p>
+
+<pre><code>public class ListAdapter2 extends BaseAdapter {
+    ArrayList&lt;String&gt; data;
+    ArrayList&lt;Boolean&gt; isChecked;
+    Context context;
+    Holder holder;
+    public ListAdapter2(Context context, ArrayList&lt;String&gt; data, ArrayList&lt;Boolean&gt; isChecked) {
+        this.context = context;
+        this.data = data;
+        this.isChecked = isChecked;
+    }
+
+@Override
+public int getCount() {
+    return data.size();
+}
+
+@Override
+public Object getItem(int i) {
+    return data.get(i);
+}
+
+@Override
+public long getItemId(int i) {
+    return i;
+}
+
+@Override
+public View getView(int i, View view, ViewGroup viewGroup) {
+    if(view == null) {
+        view = LayoutInflater.from(context).inflate(R.layout.list_item, null);
+        holder = new Holder();
+        holder.box = (CheckBox) view.findViewById(R.id.cb_isChecked);
+        holder.name = (TextView) view.findViewById(R.id.tv_name);
+        view.setTag(holder);
+
+    } else {
+        holder = (Holder) view.getTag();
+    }
+
+    holder.name.setText(data.get(i));
+    System.out.println(&quot;即将改变成&quot; + isChecked.get(i) + &quot;i&quot; + i);
+    holder.box.setTag(i);
+
+    holder.box.setChecked(isChecked.get(i));
+
+    holder.box.setOnCheckedChangeListener(new CheckedListener());
+    return view;
+}
+
+class CheckedListener implements CompoundButton.OnCheckedChangeListener {
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        isChecked.set((Integer) compoundButton.getTag(), b);
+    }
+}
+
+class Holder {
+    TextView name;
+    CheckBox box;
+}
+}
+</code></pre>
+
+<p>　　
+　　</p>
+			</div>
+
+		
+
+			
+		</div>
+
+  </body>
+</html>

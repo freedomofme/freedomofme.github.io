@@ -93,10 +93,10 @@ ldpi: 0.75
     
     <item>
       <title>关于Android的ListView中CheckBox错乱</title>
-      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8Eandroid%E7%9A%84listview%E4%B8%ADcheckbox%E9%94%99%E4%B9%B1/</link>
+      <link>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8Eandroid%E7%9A%84checkbox%E9%94%99%E4%B9%B1/</link>
       <pubDate>Fri, 01 Jan 2016 17:57:45 +0800</pubDate>
       
-      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8Eandroid%E7%9A%84listview%E4%B8%ADcheckbox%E9%94%99%E4%B9%B1/</guid>
+      <guid>http://freedomofme.github.io/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8Eandroid%E7%9A%84checkbox%E9%94%99%E4%B9%B1/</guid>
       <description>&lt;p&gt;本文参考：
 &amp;gt; &lt;a href=&#34;http://www.cnblogs.com/xiaowenji/archive/2010/12/08/1900579.html&#34;&gt;ListView中getView的原理＋如何在ListView中放置多个item&lt;/a&gt;&lt;/p&gt;
 
